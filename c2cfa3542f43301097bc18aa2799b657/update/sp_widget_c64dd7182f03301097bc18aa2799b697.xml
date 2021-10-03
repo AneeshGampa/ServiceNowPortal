@@ -1,0 +1,1432 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+	var c = this;
+		/***Start Expandable Cards***/
+	//wow this is bad code...but hey, it works...
+		c.expandApps = function() {
+  var appTab = angular.element( document.querySelectorAll( '.ft-app-tab' ) );
+console.log("The element is" + appTab);
+			appTab.addClass('expanded');
+};
+	
+			c.expandApps2 = function() {
+  var element = document.getElementById("ft-app-tab2");
+				console.log(element);
+  //element.classList.addClass("expanded");
+  element.classList.toggle("expanded");
+};
+	
+			c.collapseCard3 = function() {
+  var element = document.getElementById("card-id3");
+  element.classList.toggle("expanded");
+};
+	
+			c.collapseCard4 = function() {
+  var element = document.getElementById("card-id4");
+  element.classList.toggle("expanded");
+};
+	
+			c.collapseCard5 = function() {
+  var element = document.getElementById("card-id5");
+  element.classList.toggle("expanded");
+};
+	
+			c.collapseCard6 = function() {
+  var element = document.getElementById("card-id6");
+  element.classList.toggle("expanded");
+};
+	/***End Expandable Cards***/	
+	
+	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/**Start Tabs Section***/&#13;
+#hub-panel {&#13;
+  //background-color: pink;&#13;
+}&#13;
+&#13;
+#boxer-panel {&#13;
+&#13;
+}&#13;
+&#13;
+.app-tabset {&#13;
+  //max-width: 65em;&#13;
+  width: 100%;&#13;
+}&#13;
+&#13;
+.app-title {&#13;
+  font-size: 1.4em;&#13;
+}&#13;
+&#13;
+.hub-app-title {&#13;
+  font-size: 1.35em;&#13;
+}&#13;
+&#13;
+.tab-panel {&#13;
+  border-top: none !important;&#13;
+  border-radius: 4px&#13;
+}&#13;
+&#13;
+.app-panel {&#13;
+  //visibility:hidden;&#13;
+  //display: none;&#13;
+}&#13;
+&#13;
+&#13;
+.app-tabset &gt; label {&#13;
+  margin-bottom: 0px !important;&#13;
+  //display: inline-grid !important;&#13;
+  text-align: center;&#13;
+  margin: 0 4.3px;&#13;
+  position: relative;&#13;
+  display: inline-block;&#13;
+  padding: 13px 0 15px;&#13;
+  //border: 1px solid transparent;&#13;
+  border-bottom: 0;&#13;
+  cursor: pointer;&#13;
+  font-weight: 600;&#13;
+  border-top-left-radius: 4px;&#13;
+  border-top-right-radius: 4px;&#13;
+  margin-left: auto;&#13;
+  margin-right: auto;&#13;
+&#13;
+}&#13;
+.ft-app-tab {&#13;
+  transition: all .25s ease-in-out;&#13;
+  width: 12%;&#13;
+}&#13;
+&#13;
+.ft-app-tab:hover {&#13;
+  transition: all .2s ease-in-out;&#13;
+  transform: scale(1.03);&#13;
+}&#13;
+&#13;
+.ft-app-tab.expanded {&#13;
+  width: 14% !important;&#13;
+}&#13;
+&#13;
+&#13;
+.app-tabset &gt; input:first-child:checked ~ .tab-panels &gt; .tab-panel:first-child,&#13;
+.app-tabset &gt; input:nth-child(3):checked ~ .tab-panels &gt; .tab-panel:nth-child(2),&#13;
+.app-tabset &gt; input:nth-child(5):checked ~ .tab-panels &gt; .tab-panel:nth-child(3),&#13;
+.app-tabset &gt; input:nth-child(7):checked ~ .tab-panels &gt; .tab-panel:nth-child(4),&#13;
+.app-tabset &gt; input:nth-child(9):checked ~ .tab-panels &gt; .tab-panel:nth-child(5),&#13;
+.app-tabset &gt; input:nth-child(11):checked ~ .tab-panels &gt; .tab-panel:nth-child(6),&#13;
+.app-tabset &gt; input:nth-child(13):checked ~ .tab-panels &gt; .tab-panel:nth-child(7) {&#13;
+  //transition: all .36s ease-in-out;&#13;
+  display: block;&#13;
+  //visibility: visible;&#13;
+  //transition-property: height;&#13;
+  //transition-duration: .36s;&#13;
+  //transition-delay: .25s;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:first-child:checked ~ #tab1 {&#13;
+  transition: all .36s ease-in-out;&#13;
+  //background-color: #DAEAF1;&#13;
+  transform: scale(1.14);&#13;
+  //background-color:#0085C4 ;&#13;
+  //color: #fff;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:first-child:checked ~ .tab-panels &gt; .tab-panel:first-child {&#13;
+  //background-color: #DAEAF1;&#13;
+  //background-color:#0085C4 ;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(3):checked ~ #tab2 {&#13;
+  //background-color: #C7E7F5; //boxer icon 0095d3 //darker #90CFEA&#13;
+  //background-color:#006DAD ;&#13;
+  //color: #fff;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(3):checked ~ .tab-panels &gt; .tab-panel:nth-child(2){&#13;
+  //background-color: #C7E7F5; //boxer icon 0095d3 //darker #90CFEA&#13;
+  //background-color:#006DAD ;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(5):checked ~ #tab3 {&#13;
+  //background-color: #C9E8E4;&#13;
+  //background-color:#00AE9D ;&#13;
+  //color: #fff;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(5):checked ~ .tab-panels &gt; .tab-panel:nth-child(3){&#13;
+  //background-color: #C9E8E4;&#13;
+  //background-color:#00AE9D ;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(7):checked ~ #tab4 {&#13;
+  //background-color: #FBD8B6;&#13;
+  //background-color:#F37400 ;&#13;
+  //color: #fff;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(7):checked ~ .tab-panels &gt; .tab-panel:nth-child(4){&#13;
+  //background-color: #FBD8B6;&#13;
+  //background-color:#F37400 ;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(9):checked ~ #tab5 {&#13;
+  //background-color: #E2E6E9;&#13;
+  //background-color:#798792 ;&#13;
+  //color: #fff;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(9):checked ~ .tab-panels &gt; .tab-panel:nth-child(5){&#13;
+  //background-color: #E2E6E9;&#13;
+  //background-color:#798792 ;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(11):checked ~ #tab6 {&#13;
+  //background-color: pink;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(11):checked ~ .tab-panels &gt; .tab-panel:nth-child(6) {&#13;
+&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(13):checked ~ #tab7 {&#13;
+  //background-color: pink;&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(13):checked ~ .tab-panels &gt; .tab-panel:nth-child(7) {&#13;
+&#13;
+}&#13;
+&#13;
+input::checked #tab1 {&#13;
+  height: 1000px;&#13;
+}&#13;
+&#13;
+/***START FANCY TABS***/&#13;
+.tab-row {&#13;
+  border-bottom: 2px solid #717171; &#13;
+  margin-top: -3px;&#13;
+}&#13;
+&#13;
+//hiding radio buttons&#13;
+.app-tabset &gt; input[type="radio"] {&#13;
+  position: absolute;&#13;
+  left: -200vw;&#13;
+  visibilty: hidden;&#13;
+}&#13;
+&#13;
+.app-tabset .tab-panel {&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+&#13;
+//Content below tab text; currently not using&#13;
+/*&#13;
+.tabset &gt; label::after {&#13;
+content: "";&#13;
+position: absolute;&#13;
+left: 15px;&#13;
+bottom: 10px;&#13;
+}&#13;
+*/&#13;
+&#13;
+.app-tabset &gt; label:hover,&#13;
+.app-tabset &gt; input:focus + label {&#13;
+  color: #717171;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; label:hover::after,&#13;
+.app-tabset &gt; input:focus + label::after,&#13;
+.app-tabset &gt; input:checked + label::after {&#13;
+  color: #717171;&#13;
+  background: none !important;&#13;
+}&#13;
+&#13;
+//style of active tab&#13;
+.app-tabset &gt; input:checked + label {&#13;
+  margin-bottom: -1px;&#13;
+}&#13;
+&#13;
+.tab-panel {&#13;
+  padding-top: 8px;&#13;
+  padding-bottom: 30px;&#13;
+  border-top: 1px solid #ccc;&#13;
+  margin-right: 0 10.5em;&#13;
+}&#13;
+&#13;
+.tab-panel-title {&#13;
+  margin-top: 12px;&#13;
+  margin-bottom: 15px;&#13;
+}&#13;
+&#13;
+.tab-panels {&#13;
+  //padding: 0 10.5em;&#13;
+}&#13;
+&#13;
+.download-link-wrapper {&#13;
+  width: 10%;&#13;
+  position: absolute;&#13;
+  margin-left: 20px;&#13;
+  color: #1D5F99 !important;&#13;
+  font-weight: 550;&#13;
+  font-size: 1.1em;&#13;
+}&#13;
+&#13;
+.ws1-app-help-button {&#13;
+  align-items: left;&#13;
+  //float: left;&#13;
+}&#13;
+&#13;
+.ws1-download-icon {&#13;
+  width: 6em;&#13;
+  height: auto;&#13;
+  margin-left: 10px;&#13;
+  transition: .25s ease-in-out;&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+.ws1-download-icon:hover {&#13;
+  transform: scale(1.1);&#13;
+  transition: .25s ease-in-out;&#13;
+}&#13;
+&#13;
+.learn-more-text {&#13;
+  margin-left: 17.5px;&#13;
+}&#13;
+&#13;
+.ws1-app-description {&#13;
+  margin-left: 10em;&#13;
+  text-align: left;&#13;
+  width: 90%;&#13;
+  margin-top: 25px;&#13;
+  padding-right: 250px;&#13;
+}&#13;
+&#13;
+.app-description {&#13;
+  margin-left: 10em;&#13;
+  text-align: left;&#13;
+  width: 90%;&#13;
+  padding-right: 250px;&#13;
+}&#13;
+&#13;
+.app-description &gt; h2{&#13;
+  margin-top: 14px;&#13;
+  margin-bottom: 10px;&#13;
+}&#13;
+&#13;
+/***END FANCY TABS***/&#13;
+&#13;
+/*****Start Left-&gt;Right bottom border style*****/&#13;
+.ws1-slider {&#13;
+  position: absolute;&#13;
+  display:block;&#13;
+  left: 0;&#13;
+  top:90%;&#13;
+  margin:0 auto;&#13;
+  height: 4px;&#13;
+  background-color: #206AAA;&#13;
+  width: 0%;&#13;
+  transition: width .6s ease;&#13;
+  z-index: 50;&#13;
+  visibility: hidden;&#13;
+}&#13;
+.ws1-nombore{&#13;
+  position:relative;&#13;
+  //display:inline-block;&#13;
+  display: block;&#13;
+  transition: all 0.3s ease-out;&#13;
+}&#13;
+.ws1-nombore:hover .o365-slider {&#13;
+  width: 100%;&#13;
+}&#13;
+.ws1-nombore:hover span {&#13;
+  color: #676567;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:first-child:checked ~ .panel-slider &gt; #active-slider1{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #0085C4; //#019004;&#13;
+} &#13;
+&#13;
+.app-tabset &gt; input:nth-child(3):checked ~ .panel-slider &gt; #active-slider2{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #fdd54d; //#3190e8;&#13;
+}&#13;
+&#13;
+.app-tabset &gt; input:nth-child(5):checked ~ .panel-slider &gt; #active-slider3{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #912d88;&#13;
+} &#13;
+&#13;
+.app-tabset &gt; input:nth-child(7):checked ~ .panel-slider &gt; #active-slider4{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #0178D6;&#13;
+} &#13;
+&#13;
+.app-tabset &gt; input:nth-child(9):checked ~ .panel-slider &gt; #active-slider5{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #28a8ea;&#13;
+} &#13;
+&#13;
+.app-tabset &gt; input:nth-child(11):checked ~ .panel-slider &gt; #active-slider6{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #5558AF;&#13;
+} &#13;
+&#13;
+.app-tabset &gt; input:nth-child(13):checked ~ .panel-slider &gt; #active-slider7{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  background-color: #0c6bcc; //light blue: #4fd8fe&#13;
+} &#13;
+&#13;
+/***Start Other Apps Sliders***/&#13;
+.other-app-tabset &gt; input:first-child:checked ~ .panel-slider &gt; #active-slider1{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #0085C4;&#13;
+  background-color: #019004; //#F37400;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(3):checked ~ .panel-slider &gt; #active-slider2{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #006DAD;&#13;
+  background-color: #3190e8; //#798792;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(5):checked ~ .panel-slider &gt; #active-slider3{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #00AE9D;&#13;
+  background-color: #0072C5;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(7):checked ~ .panel-slider &gt; #active-slider4{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #0178D6;&#13;
+  background-color: #682B7A;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(9):checked ~ .panel-slider &gt; #active-slider5{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #28a8ea;&#13;
+  background-color: #a51414;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(11):checked ~ .panel-slider &gt; #active-slider6{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #5558AF;&#13;
+  background-color: #e15501;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(13):checked ~ .panel-slider &gt; #active-slider7{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #0c6bcc; //light blue: #4fd8fe&#13;
+  background-color: #107c41;&#13;
+} &#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(15):checked ~ .panel-slider &gt; #active-slider8{&#13;
+  position: absolute;&#13;
+  height: 4px;&#13;
+  width: 100%;&#13;
+  visibility: visible;&#13;
+  //background-color: #0c6bcc; //light blue: #4fd8fe&#13;
+  background-color: #0f5196;&#13;
+} &#13;
+&#13;
+&#13;
+/*****End Left-&gt;Right bottom border style*****/&#13;
+&#13;
+/**End Tabs Section***/&#13;
+&#13;
+&#13;
+/***Start Animation***/&#13;
+&#13;
+@-webkit-keyframes ws1-fadeInRight {&#13;
+  from {&#13;
+    opacity: 0;&#13;
+    -webkit-transform: translate3d(45%, 0, 0);&#13;
+    transform: translate3d(45%, 0, 0);&#13;
+  }&#13;
+&#13;
+  to {&#13;
+    opacity: 1;&#13;
+    -webkit-transform: translate3d(0, 0, 0);&#13;
+    transform: translate3d(0, 0, 0);&#13;
+  }&#13;
+}&#13;
+&#13;
+@keyframes ws1-fadeInRight {&#13;
+  from {&#13;
+    opacity: 0;&#13;
+    -webkit-transform: translate3d(45%, 0, 0);&#13;
+    transform: translate3d(45%, 0, 0);&#13;
+  }&#13;
+&#13;
+  to {&#13;
+    opacity: 1;&#13;
+    -webkit-transform: translate3d(0, 0, 0);&#13;
+    transform: translate3d(0, 0, 0);&#13;
+  }&#13;
+}&#13;
+&#13;
+.ws1-fadeInRight {&#13;
+  -webkit-animation-name: ws1-fadeInRight;&#13;
+  animation-name: ws1-fadeInRight;&#13;
+}&#13;
+/***End Animation***/&#13;
+&#13;
+&#13;
+&#13;
+/***Start Workspace One Links Style***/&#13;
+.ws1-title {&#13;
+  text-align: center;&#13;
+  font-size: 2.5em;&#13;
+  margin-bottom: .65em;&#13;
+}&#13;
+&#13;
+.ws1-title-pin {&#13;
+  vertical-align: initial;&#13;
+  width: 70px;&#13;
+  height: auto;&#13;
+  padding-bottom: 5px;&#13;
+}&#13;
+&#13;
+.ws1-icon {&#13;
+  width: auto;&#13;
+  height: 135px;&#13;
+}&#13;
+&#13;
+.ws1-icon2 {&#13;
+  width: auto;&#13;
+  height: 100px;&#13;
+  margin-left: 20px;&#13;
+}&#13;
+&#13;
+.o365-title {&#13;
+  text-align: center;&#13;
+  font-size: 2.5em;&#13;
+  margin-bottom: .65em;&#13;
+}&#13;
+&#13;
+.o365-icon {&#13;
+  width: auto;&#13;
+  height: 110px;&#13;
+}&#13;
+&#13;
+.distributed-icon {&#13;
+  height: auto;&#13;
+  width: 68%;&#13;
+  margin-left: 4%;&#13;
+  margin-top: 20%;&#13;
+}&#13;
+&#13;
+.distributed-icon-larger {&#13;
+  height: auto;&#13;
+  width: 93%;&#13;
+  //margin-left: 2%;&#13;
+  margin-top: 20%;&#13;
+}&#13;
+&#13;
+#link-container {&#13;
+  border-radius: 4px;&#13;
+  //box-shadow: 0 4px 15px rgba(56, 96, 92, .02);&#13;
+  padding: 10px 0;&#13;
+  font-family: inherit;&#13;
+}&#13;
+&#13;
+#link-container:hover {&#13;
+  //background-image: &#13;
+  //  linear-gradient(rgba(188, 150, 113, 0.08), rgba(73, 137, 182, 0.08)); //Dark White--blue-orange gradient&#13;
+}&#13;
+&#13;
+&#13;
+/***End Workspace One Links Style***/&#13;
+&#13;
+&#13;
+.ws1-apps-wrapper {&#13;
+  margin-top: 20px;&#13;
+  margin-bottom: 30px;&#13;
+  padding-left: 10px; &#13;
+  padding-right: 10px; &#13;
+}&#13;
+&#13;
+.other-apps-wrapper {&#13;
+  margin-bottom: 30px;&#13;
+  padding-left: 10px; &#13;
+  padding-right: 10px; &#13;
+}&#13;
+&#13;
+.square-link {&#13;
+  height: 100%;&#13;
+}&#13;
+&#13;
+&#13;
+#icon-column {&#13;
+  overflow: hidden; &#13;
+}&#13;
+&#13;
+#square-size {&#13;
+  height: 100%;&#13;
+  vertical-align: middle;&#13;
+}&#13;
+&#13;
+.collapse {&#13;
+  visibility: hidden;&#13;
+}&#13;
+&#13;
+.in {&#13;
+  visibility: visible;&#13;
+}&#13;
+&#13;
+.collapsing {&#13;
+  position: relative;&#13;
+  height: 0;&#13;
+  overflow: hidden;&#13;
+  -webkit-transition-property: none !important;&#13;
+  transition-property: none !important;&#13;
+  -webkit-transition-duration:  none !important;&#13;
+  transition-duration:  none !important;&#13;
+  -webkit-transition-timing-function:  none !important;&#13;
+  transition-timing-function:  none !important;&#13;
+}&#13;
+&#13;
+&#13;
+&#13;
+/**Start All Apps Tabs Section***/&#13;
+}&#13;
+&#13;
+.view-all-btn {&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+.view-all-btn:hover {&#13;
+  transition: all .25s ease-in-out;&#13;
+  transform: scale(1.02);&#13;
+}&#13;
+&#13;
+.view-all-btn.collapsed {&#13;
+  height: 90px;&#13;
+  width: auto;&#13;
+  margin-left: auto;&#13;
+  margin-right: auto;&#13;
+  margin-bottom: 14px;&#13;
+  display: flex !important;&#13;
+}&#13;
+&#13;
+.other-app-tabset {&#13;
+  //max-width: 65em;&#13;
+  width: 100%;&#13;
+}&#13;
+&#13;
+.other-app-tab {&#13;
+  transition: all .25s ease-in-out;&#13;
+}&#13;
+&#13;
+.other-app-tab:hover {&#13;
+  transition: all .25s ease-in-out;&#13;
+  transform: scale(1.02);&#13;
+}&#13;
+&#13;
+.app-title {&#13;
+  font-size: 1.4em;&#13;
+}&#13;
+&#13;
+.other-tab-panel {&#13;
+  border-top: none !important;&#13;
+  border-radius: 4px&#13;
+}&#13;
+&#13;
+.other-app-panel {&#13;
+  //visibility:hidden;&#13;
+  //display: none;&#13;
+}&#13;
+&#13;
+&#13;
+.other-app-tabset &gt; label {&#13;
+  margin-bottom: 0px !important;&#13;
+  //display: inline-grid !important;&#13;
+  text-align: center;&#13;
+  margin: 0 4.3px;&#13;
+  position: relative;&#13;
+  display: inline-block;&#13;
+  padding: 13px 0 15px;&#13;
+  //border: 1px solid transparent;&#13;
+  border-bottom: 0;&#13;
+  cursor: pointer;&#13;
+  font-weight: 600;&#13;
+  border-top-left-radius: 4px;&#13;
+  border-top-right-radius: 4px;&#13;
+  margin-left: auto;&#13;
+  margin-right: auto;&#13;
+  width: 12.24%; //12% to fit 8 items, 14% for 7 items&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:checked + label {&#13;
+  //margin: 0 4.3px;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:first-child:checked ~ .other-tab-panels &gt; .other-tab-panel:first-child,&#13;
+.other-app-tabset &gt; input:nth-child(3):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(2),&#13;
+.other-app-tabset &gt; input:nth-child(5):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(3),&#13;
+.other-app-tabset &gt; input:nth-child(7):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(4),&#13;
+.other-app-tabset &gt; input:nth-child(9):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(5),&#13;
+.other-app-tabset &gt; input:nth-child(11):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(6),&#13;
+.other-app-tabset &gt; input:nth-child(13):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(7),&#13;
+.other-app-tabset &gt; input:nth-child(15):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(8) {&#13;
+  //transition: all .36s ease-in-out;&#13;
+  display: block;&#13;
+  //visibility: visible;&#13;
+  //transition-property: height;&#13;
+  //transition-duration: .36s;&#13;
+  //transition-delay: .25s;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:first-child:checked ~ #other-tab1 {&#13;
+  transition: all .36s ease-in-out;&#13;
+  //background-color: #DAEAF1;&#13;
+  transform: scale(1.14);&#13;
+  //background-color:#0085C4 ;&#13;
+  //color: #fff;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:first-child:checked ~ .other-tab-panels &gt; .other-tab-panel:first-child {&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(3):checked ~ #other-tab2 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(3):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(2){&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(5):checked ~ #other-tab3 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(5):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(3){&#13;
+&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(7):checked ~ #other-tab4 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(7):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(4){&#13;
+&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(9):checked ~ #other-tab5 {&#13;
+&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(9):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(5){&#13;
+&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(11):checked ~ #other-tab6 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(11):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(6) {&#13;
+&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(13):checked ~ #other-tab7 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(13):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(7) {&#13;
+&#13;
+}&#13;
+&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(15):checked ~ #other-tab8 {&#13;
+  transform: scale(1.14);&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; input:nth-child(15):checked ~ .other-tab-panels &gt; .other-tab-panel:nth-child(8) {&#13;
+&#13;
+}&#13;
+&#13;
+input::checked #tab1 {&#13;
+  height: 1000px;&#13;
+}&#13;
+&#13;
+/***START FANCY TABS***/&#13;
+.tab-row {&#13;
+  border-bottom: 2px solid #717171; &#13;
+  margin-top: -3px;&#13;
+}&#13;
+&#13;
+//hiding radio buttons&#13;
+.other-app-tabset &gt; input[type="radio"] {&#13;
+  position: absolute;&#13;
+  left: -200vw;&#13;
+  visibilty: hidden;&#13;
+}&#13;
+&#13;
+.other-app-tabset .other-tab-panel {&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; label:hover,&#13;
+.other-app-tabset &gt; input:focus + label {&#13;
+  color: #717171;&#13;
+}&#13;
+&#13;
+.other-app-tabset &gt; label:hover::after,&#13;
+.other-app-tabset &gt; input:focus + label::after,&#13;
+.other-app-tabset &gt; input:checked + label::after {&#13;
+  color: #717171;&#13;
+  background: none !important;&#13;
+}&#13;
+&#13;
+//style of active tab&#13;
+.other-app-tabset &gt; input:checked + label {&#13;
+  margin-bottom: -1px;&#13;
+}&#13;
+&#13;
+.other-tab-panel {&#13;
+  padding-top: 8px;&#13;
+  padding-bottom: 30px;&#13;
+  border-top: 1px solid #ccc;&#13;
+  margin-right: 0 10.5em;&#13;
+}&#13;
+&#13;
+&#13;
+/***END FANCY TABS***/&#13;
+&#13;
+/*****End Left-&gt;Right bottom border style*****/&#13;
+&#13;
+/**End Tabs Section***/&#13;
+&#13;
+/*****Start Responsive Sizing*****/&#13;
+.distributed-row {&#13;
+  display: -webkit-box;&#13;
+  display: -webkit-flex;&#13;
+  display: -ms-flexbox;&#13;
+  display:         flex;&#13;
+  flex-wrap: wrap;&#13;
+}&#13;
+.distributed-row &gt; [class*='col-'] {&#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+}&#13;
+&#13;
+&#13;
+//ultra wide monitor&#13;
+@media screen and (max-width:2560px) {  &#13;
+  .ws1-icon {&#13;
+    width: auto;&#13;
+    height: 138px !important;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 110px !important;&#13;
+  }&#13;
+&#13;
+  .o365-office-icon {&#13;
+    width: auto;&#13;
+    height: 100px;&#13;
+  }&#13;
+}&#13;
+&#13;
+//medium wide monitor&#13;
+@media screen and (max-width:1920px) {&#13;
+  .ws1-icon{&#13;
+    width: auto;&#13;
+    height: 130px !important;&#13;
+  }&#13;
+  h2 {&#13;
+    font-size: 28px;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 100px !important;&#13;
+  }&#13;
+&#13;
+  .o365-office-icon {&#13;
+    width: auto;&#13;
+    height: 85px;&#13;
+  }&#13;
+}&#13;
+&#13;
+//medium wide monitor&#13;
+@media screen and (max-width:1712px) {&#13;
+  .ws1-icon {&#13;
+    width: auto;&#13;
+    height: 105px !important;&#13;
+  }&#13;
+  .text-larger {&#13;
+    font-size: 1.08em;&#13;
+  }&#13;
+  h2 {&#13;
+    font-size: 25px;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 85px !important;&#13;
+  }&#13;
+&#13;
+  .o365-office-icon {&#13;
+    width: auto;&#13;
+    height: 85px;&#13;
+  }&#13;
+}&#13;
+&#13;
+//Small monitor&#13;
+@media screen and (max-width:1268px) {&#13;
+  .ws1-icon {&#13;
+&#13;
+  }&#13;
+  .o365-icon {&#13;
+&#13;
+  }&#13;
+&#13;
+  .o365-office-icon {&#13;
+&#13;
+  }&#13;
+  .text-larger {&#13;
+&#13;
+  }&#13;
+  h2 {&#13;
+&#13;
+  }&#13;
+  .app-title {&#13;
+    font-size: 1.2em;&#13;
+  }&#13;
+  .hub-app-title {&#13;
+    font-size: 1.12em;&#13;
+  }&#13;
+}&#13;
+&#13;
+//mobile large&#13;
+@media screen and (max-width:1080px) {&#13;
+  .ws1-icon {&#13;
+    width: auto;&#13;
+    height: 80px !important;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 60px !important;&#13;
+  }&#13;
+&#13;
+  .o365-office-icon {&#13;
+    width: auto;&#13;
+    height: 70px;&#13;
+  }&#13;
+  .text-larger {&#13;
+    font-size: 1em;&#13;
+  }&#13;
+  h2 {&#13;
+    font-size: 25px;&#13;
+  }&#13;
+}&#13;
+&#13;
+//mobile medium&#13;
+@media screen and (max-width:750px) {&#13;
+  .ws1-icon {&#13;
+    width: auto;&#13;
+    height: 60px !important;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 45px !important;&#13;
+  }&#13;
+  .text-larger {&#13;
+    font-size: 1em;&#13;
+  }&#13;
+  h2 {&#13;
+    font-size: 25px;&#13;
+  }&#13;
+  .mobile-hide {&#13;
+    display: none;&#13;
+  }&#13;
+}&#13;
+&#13;
+//mobile small&#13;
+@media screen and (max-width:640px) {&#13;
+  .ws1-icon {&#13;
+    width: auto;&#13;
+    height: 47px !important;&#13;
+  }&#13;
+  .o365-icon {&#13;
+    width: auto;&#13;
+    height: 30px !important;&#13;
+  }&#13;
+  .text-larger {&#13;
+    font-size: 1em;&#13;
+  }&#13;
+  h2 {&#13;
+    font-size: 25px;&#13;
+  }&#13;
+  .mobile-hide {&#13;
+    display: none;&#13;
+  }&#13;
+}&#13;
+/*****End Responsive Sizing*****/&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>featured_apps</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Featured Apps</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 13:28:03</sys_created_on>
+        <sys_id>c64dd7182f03301097bc18aa2799b697</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Featured Apps</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_c64dd7182f03301097bc18aa2799b697</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+        <template><![CDATA[<div class="mobile-hide ws1-apps-wrapper">
+  <div>
+    <div class="ws1-title text-darker">
+     <!-- <img src="left_pin_green.png" class="ws1-title-pin"/> -->
+      Available Mobile Apps
+      <!--<img src="right_pin_green.png" class="ws1-title-pin"/> -->
+    </div>
+  </div>
+
+
+  <div class="app-tabset">
+
+    <!-- Tab 1 -->
+    <input type="radio" name="app-tabset" id="tab1" aria-controls="hub">
+    <label for="tab1" id="tab1" class="ft-app-tab text-larger">
+      <img class="ws1-icon" src="yammer_logo.png">
+      <div class="hub-app-title">
+        Yammer
+      </div>
+    </label>
+
+    <!-- Tab 2 -->
+    <input type="radio" name="app-tabset" id="tab2" aria-controls="boxer">
+    <label for="tab2" id="tab2" class="ft-app-tab text-larger">
+      <img class="ws1-icon" src="sparq_logo.png">
+      <div class="app-title">
+        Sparq
+      </div>
+    </label>
+
+
+
+    <!-- Tab 4 -->
+    <input type="radio" name="app-tabset" id="tab4" aria-controls="content">
+    <label for="tab4" id="tab4" class="ft-app-tab text-larger">
+      <img class="ws1-icon" src="authenticator_squared.png">
+      <div class="app-title">
+        Authenticator
+        <!--Authenticator-->
+      </div>
+    </label>
+
+    <!-- Tab 6 -->
+    <input type="radio" name="app-tabset" id="tab6" aria-controls="send">
+    <label for="tab6" id="tab6" class="ft-app-tab text-larger">
+      <img class="ws1-icon" src="teams_squared.png">
+      <div class="app-title">
+        Teams
+        <!--Teams-->
+      </div>
+    </label>
+
+    <!-- Tab 7 -->
+    <input type="radio" name="app-tabset" id="tab7" aria-controls="send">
+    <label for="tab7" id="tab7" class="ft-app-tab text-larger">
+      <img class="ws1-icon" src="outlook_squared.png">
+      <div class="app-title">
+        Outlook
+        <!--Outlook-->
+      </div>
+    </label>
+
+    <!-- Tab 8 -->
+    <input type="radio" name="app-tabset" id="tab8" aria-controls="send">
+    <label for="tab8" id="tab8" class="ft-app-tab text-larger">
+      <img class="view-all-btn collapsed"
+           src="ws1_view_more_text.png"
+           ng-click="c.expandApps()"
+           data-target="#other-apps" 
+           aria-expanded="false"
+
+           data-toggle="collapse">
+    </label>
+
+
+
+
+    <div class="panel-slider ws1-nombore">
+      <span class="ws1-slider" id="active-slider1"></span>
+      <span class="ws1-slider" id="active-slider2"></span>
+      <span class="ws1-slider" id="active-slider3"></span>
+      <span class="ws1-slider" id="active-slider4"></span>
+      <span class="ws1-slider" id="active-slider5"></span>
+      <span class="ws1-slider" id="active-slider6"></span>
+      <span class="ws1-slider" id="active-slider7"></span>
+    </div>
+
+    <div class="tab-panels">
+
+      <section id="hub-panel" class="tab-panel app-panel section animated faster ws1-fadeInRight">
+        <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=bb7dca90dba69c14a91093dcd3961987" class="download-link-wrapper">
+          <img class="ws1-download-icon ws1-app-help-button" src="yammer_logo.png">
+          <div class="learn-more-text">
+            Learn More
+          </div>
+        </a>
+
+        <div class="ws1-app-description text-darker text-larger"> 
+          <h2>
+            Yammer
+          </h2>
+          <span>
+Yammer application allows you to connect and engage with team members across the enterprise to share ideas and experiences, ask each other questions, and create or join communities of interest. 
+          </span>
+            </div>
+      </section>
+
+      <section id="boxer-panel" class="tab-panel app-panel section animated faster ws1-fadeInRight">
+        <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=d612ae58db6a9c14a91093dcd396196b" class="download-link-wrapper">
+          <img class="ws1-download-icon ws1-app-help-button" src="sparq_logo.png">
+          <div class="learn-more-text">
+            Learn More
+          </div>
+        </a>
+        <div class="ws1-app-description text-darker text-larger"> 
+          <h2>
+            Sparq
+          </h2>
+Sparq is UnitedHealth Group's mobile app for employees that puts what you need at your fingertips, helps you stay informed with industry and company news, and keeps you connected to other team members.
+        </div>
+      </section>
+
+
+      <section id="content-panel" class="tab-panel app-panel section animated faster ws1-fadeInRight">
+        <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+          <img class="ws1-download-icon ws1-app-help-button" src="authenticator_squared.png">
+          <div class="learn-more-text">
+            Learn More
+          </div>
+        </a>
+        <div class="app-description text-darker text-larger"> 
+          <h2>
+            Authenticator
+          </h2>
+          The Microsoft Authenticator application provides the ability to authenticate more seamlessly into each of the other Microsoft applications. This is the first application that should be configured when setting up the Office 365 Mobile applications.                 
+        </div>
+      </section>
+
+      <section id="content-panel" class="tab-panel app-panel section animated faster ws1-fadeInRight">
+        <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+          <img class="ws1-download-icon ws1-app-help-button" src="teams_squared.png">
+          <div class="learn-more-text">
+            Learn More
+          </div>
+        </a>
+        <div class="app-description text-darker text-larger"> 
+          <h2>
+            Teams
+          </h2>
+          The Microsoft Teams application offers persistent chat, file sharing, meeting, and other collaboration features from a mobile device. 
+
+        </div>
+      </section>
+
+      <section id="send-panel" class="tab-panel app-panel section animated faster ws1-fadeInRight">
+        <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+          <img class="ws1-download-icon ws1-app-help-button" src="outlook_squared.png">
+          <div class="learn-more-text">
+            Learn More
+          </div>
+        </a>
+        <div class="app-description text-darker text-larger"> 
+          <h2>
+            Outlook
+          </h2>
+          The Microsoft Outlook application offers an alternative mobile mail client to Boxer. 
+          It provides the ability to access your email, calendar, and contacts. 
+          The Outlook mobile application requires your mailbox to have been moved to Exchange Online. 
+          Check 
+          <a target="_blank" href="https://helpdesk.uhg.com/At_Your_Service/SW/Pages/whichexchangeareyou.aspx">here</a>
+          to determine your Exchange version.
+        </div>
+      </section>
+
+    </div> <!--END TAB PANELS-->
+
+  </div> <!--END TABSET-->
+
+</div> <!--END WS1 APPS WRAPPER-->
+
+
+<!--button class="euts-btn-md euts-btn-blue other-apps-btn" 
+data-target="#other-apps" 
+aria-expanded="false"
+aria-controls="PADUFilter"
+data-toggle="collapse">
+View All Apps
+</button-->
+<div class="col-md-12">
+  <div class="collapsed multi-collapse collapse animated faster ws1-fadeInRight" id="other-apps">
+    <div class="other-apps-wrapper">
+
+      <div class="other-app-tabset">
+
+        <!-- Tab 1 -->
+        <!-- Tab 2 -->
+        <input type="radio" name="other-app-tabset" id="other-tab2" aria-controls="boxer">
+        <label for="other-tab2" id="other-tab2" class="other-app-tab text-larger">
+          <img class="ws1-icon" src="o365_todo1.png">
+          <div class="app-title">
+            To Do
+          </div>
+        </label>
+
+        <!-- Tab 3 -->
+        <input type="radio" name="other-app-tabset" id="other-tab3" aria-controls="web">
+        <label for="other-tab3" id="other-tab3" class="other-app-tab text-larger">
+          <img class="ws1-icon" src="sharepoint_squared.png">
+          <div class="app-title">
+            SharePoint
+          </div>
+        </label>
+
+        <!-- Tab 4 -->
+        <input type="radio" name="other-app-tabset" id="other-tab4" aria-controls="content">
+        <label for="other-tab4" id="other-tab4" class="other-app-tab text-larger">
+          <img class="ws1-icon" src="onenote_squared.png">
+          <div class="app-title">
+            OneNote
+          </div>
+        </label>
+
+        <!-- Tab 5 -->
+        <input type="radio" name="other-app-tabset" id="other-tab5" aria-controls="send">
+        <label for="other-tab5" id="other-tab5" class="other-app-tab text-larger">
+          <img class="ws1-icon" src="microsoft_office_logo.png">
+          <div class="app-title">
+            Microsoft Office
+          </div>
+        </label>
+
+        <!-- Tab 8 -->
+        <input type="radio" name="other-app-tabset" id="other-tab8" aria-controls="send">
+        <label for="other-tab8" id="other-tab8" class="other-app-tab text-larger">
+          <img class="ws1-icon" src="microsoft_edge_logo2.png">
+          <div class="app-title">
+            Microsoft Edge
+          </div>
+        </label>
+
+
+
+
+        <div class="panel-slider ws1-nombore">
+          <span class="ws1-slider" id="active-slider1"></span>
+          <span class="ws1-slider" id="active-slider2"></span>
+          <span class="ws1-slider" id="active-slider3"></span>
+          <span class="ws1-slider" id="active-slider4"></span>
+          <span class="ws1-slider" id="active-slider5"></span>
+          <span class="ws1-slider" id="active-slider6"></span>
+          <span class="ws1-slider" id="active-slider7"></span>
+          <span class="ws1-slider" id="active-slider8"></span>
+        </div>
+
+        <div class="other-tab-panels">
+
+          <section id="boxer-panel" class="other-tab-panel app-panel section animated faster ws1-fadeInRight">
+            <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=bb7dca90dba69c14a91093dcd3961987" class="download-link-wrapper">
+              <img class="ws1-download-icon ws1-app-help-button" src="o365_todo1.png">
+              <div class="learn-more-text">
+                Learn More
+              </div>
+            </a>
+            <div class="ws1-app-description text-darker text-larger"> 
+              <h2>
+                To Do
+              </h2>
+To do application allows users to create, track and sync task lists across multiple devices.
+            </div>
+          </section>
+
+          <section id="web-panel" class="other-tab-panel app-panel section animated faster ws1-fadeInRight">
+            <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+            <img class="ws1-download-icon ws1-app-help-button" src="sharepoint_squared.png">
+              <div class="learn-more-text">
+                Learn More
+              </div>
+            </a>
+            <div class="app-description text-darker text-larger"> 
+              <h2>
+                SharePoint
+              </h2>
+              The Microsoft SharePoint application provides access to your SharePoint Online sites. SharePoint Online sites are ones with a URL following the format 
+              <i>"https://uhgazure.sharepoint.com/*".</i>
+              You will be able to view files saved in SharePoint Online sites and edit them by choosing to open the files in other applications. 
+
+            </div>
+          </section>
+
+          <section id="onenote-panel" class="other-tab-panel app-panel section animated faster ws1-fadeInRight">
+            <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+              <img class="ws1-download-icon ws1-app-help-button" src="onenote_squared.png">
+              <div class="learn-more-text">
+                Learn More
+              </div>
+            </a>
+            <div class="app-description text-darker text-larger"> 
+              <h2>
+                OneNote
+              </h2>
+              The Microsoft OneNote application provides the ability to view and edit OneNote Notebooks that have been saved in your OneDrive. You may also create new OneNote Notebooks.
+            </div>
+          </section>
+
+          <section id="send-panel" class="other-tab-panel app-panel section animated faster ws1-fadeInRight">
+            <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+              <img class="ws1-download-icon ws1-app-help-button" src="microsoft_office_logo.png">
+              <div class="learn-more-text">
+                Learn More
+              </div>
+            </a>
+            <div class="app-description text-darker text-larger"> 
+              <h2>
+                Microsoft Office
+              </h2>
+              
+Microsoft Office brings you Word, Excel, and PowerPoint all in one app. Take advantage of a seamless experience with Microsoft tools on the go with the Office app, the simple solution for productivity.            
+            
+              <div>
+                
+              Scan PDF files, create spreadsheets, or draft up documents anytime and anywhere by accessing integrated Office features through your mobile device. From Word documents, PowerPoint presentations or Excel files, the Office app provides you with one seamless experience.
+              </div>
+              </div>
+          </section>
+          
+           <section id="edge-panel" class="other-tab-panel app-panel section animated faster ws1-fadeInRight">
+            <a href="?id=euts_kb_search_page&spa=1&kb_knowledge_base=743eea991bc6109c91ecc8415b4bcbac&kb_category=7147ee90dbaa9c14a91093dcd3961949" class="download-link-wrapper">
+              <img class="ws1-download-icon ws1-app-help-button" src="microsoft_edge_logo2.png">
+              <div class="learn-more-text">
+                Learn More
+              </div>
+            </a>
+            <div class="app-description text-darker text-larger"> 
+              <h2>
+                Microsoft Edge
+              </h2>
+Microsoft Edge application is a modern internet browser made by Microsoft, which is designed to replace Internet Explore for web browsing and access to applications.            
+             </div>
+          </section>
+
+        </div> <!--END TAB PANELS-->
+
+      </div> <!--END TABSET-->
+
+    </div> <!--END WS1 APPS WRAPPER-->
+
+  </div> <!--END WS1 APPS COLLAPSE-->
+</div> <!--END WS1 APPS COLUMN-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a288cc0000001</claim_timestamp>
+        <metadata_update_name>sp_widget_c64dd7182f03301097bc18aa2799b697</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:29</sys_created_on>
+        <sys_id>86b033942f43301097bc18aa2799b626</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+    </sys_claim>
+</record_update>

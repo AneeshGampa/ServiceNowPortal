@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($http, $filter, $location,spAriaUtil, $window, $scope, spAriaFocusManager) {
+	var c = this;
+	c.options.glyph = c.options.glyph || 'search';
+	c.options.title = c.options.title || c.data.searchMsg;
+	c.options.color = c.options.color || "default";
+	c.searchTerm = c.data.q;
+
+	c.onSelect = function($item, $model, $label) {
+		c.searchTerm = ""; // prevents unexpected result if user quickly clicks search button after selecting
+		if ($item.target)
+			$window.open($item.url, $item.target);
+		else {
+			var newUrl = $location.url($item.url);
+			spAriaFocusManager.navigateToLink(newUrl.url());
+		}
+	};
+
+	c.getResults = function(query) {
+		var payload = {
+			"query": query,
+			"portal": c.data.portalID,
+			"source": c.data.searchSources,
+			"include_facets": false,
+			"isTypeahead": true
+		};
+		if (c.options.limit || c.options.limit == 0)
+			payload.count = c.options.limit;
+		
+		return $http.post("/api/now/sp/search", payload).then(function(response) {
+			var result = response.data.result;
+			spAriaUtil.sendLiveMessage(result.results.length + " " +
+																 c.data.resultMsg + " " +
+																 c.data.navigationMsg +
+																 getNavigationKeys());
+			return result.results.map(function(item) {
+				var config = c.data.searchSourceConfiguration[item.__search_source_id__];
+				if (config.type == "ADVANCED") {
+					item.templateID = config.template;
+					if(item.sys_id== '7eab63034f30070031f9f7e18110c79e'){
+						//if item is software intake
+						item.url = '?id=euts_software_intake_form&sys_id='+item.sys_id;
+					}
+					else if(item.sys_id == '8a46a1a31bfe48100eb6c8451a4bcb87'){
+			item.url = '?id=euts_ra&sys_id='+item.sys_id;
+		}
+					else if(c.data.EUTSItemIds.indexOf(item.sys_id) != -1 && (item.sys_id != 'd1c9145fdb7ac010cca51ffa68961932' && item.sys_id != 'a51586d41b43c0500eb6c8451a4bcbee' && item.sys_id != 'f804788cdbab0018f668622dca9619b8' && item.sys_id != '6915ddb2dbbf4410f668622dca96193c' && item.sys_id != '8f51b8a6db5d581022dd088faa96192d'&& item.sys_id != 'a4fb4f98dbadd090743e6a37059619b3' && item.sys_id !='cfd7be2fdb1bdc18a91093dcd39619cd' && item.sys_id != '25379fd5db082410cdd254f948961975' && item.sys_id != '3bf40231db7e2410586378fdaa961969' && item.sys_id != '4b40f9ab1b73e0148f95fe631a4bcbb1'&& item.sys_id != 'e241368a1b9a3810b2b15530604bcb78')){ 
+						//if item is in the EUTS Intake scope (APS items)
+						item.url = '?id=euts_sc_cat_item&sys_id='+item.sys_id;
+					}else{
+						item.url = '?id=euts_sc_cat_item_form&sys_id='+item.sys_id;
+					}
+				} else {
+					item.glyph = config.glyph;
+					if (!item.url && config.linkToPage) {
+						item.url = "?id=" + config.linkToPage;
+						if (item.sys_id)
+							item.url += "&sys_kb_id=" + item.sys_id;
+						if (item.table)
+							item.url += "&table=" + item.table
+					}
+				}
+				return item;
+			});
+		});
+	}
+
+	c.searchType = c.data.searchType;
+	$scope.$on('$locationChangeSuccess', onLocationChangeSuccess);
+
+	function onLocationChangeSuccess(event, newUrl, oldUrl) {
+		if(searchSourceChanged(newUrl, oldUrl)) {
+			var newUrlParams = newUrl.match(/t=.+/);
+			if(!newUrlParams) {
+				c.searchType = null;
+			} else {
+				c.searchType = newUrlParams[0].split("&")[0].substring(2);
+			}
+		}
+	}
+
+	function searchSourceChanged(newUrl, oldUrl) {
+		var newUrlParams = newUrl.match(/t=.+/),
+				oldUrlParams = oldUrl.match(/t=.+/);
+
+		if(!newUrlParams && !oldUrlParams) {
+			return false;
+		}
+
+		if((!newUrlParams && oldUrlParams) || (newUrlParams && !oldUrlParams)) {
+			return true;
+		}
+
+		return newUrlParams[0].split("&")[0] !== oldUrlParams[0].split("&")[0];
+	}
+
+	c.submitSearch = function() {
+		var shouldReloadPage = c.data.refreshPageOnSearch && $location.search().id === 'euts_search';
+
+		if (c.searchTerm) {
+			var newUrl = $location.search({
+				id: 'euts_search',
+				spa: '1',
+				t: c.searchType,
+				q: c.searchTerm
+			});
+
+			if (shouldReloadPage)
+				$scope.$emit("sp.page.reload");
+
+			spAriaFocusManager.navigateToLink(newUrl.url());
+		}
+	}
+
+	function getNavigationKeys() {
+		if($window.navigator.userAgent.indexOf("Mac OS X") > -1)
+			return '⌘';
+		return 'Control';
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>ul.dropdown-menu {&#13;
+    min-width: 100%;&#13;
+    border-radius: 0px 0px 4px 4px;&#13;
+    margin:0px;&#13;
+}&#13;
+&#13;
+ul.dropdown-menu a.ta-item {&#13;
+	line-height: 20px;&#13;
+}&#13;
+&#13;
+ul.dropdown-menu i.ta-icon, i.ta-img {&#13;
+    width: 20px;&#13;
+    height: 20px;&#13;
+    background-size: contain;&#13;
+    display: inline-block;&#13;
+    background-repeat: no-repeat;&#13;
+    background-position: center center;&#13;
+    text-align: center;&#13;
+    line-height: 20px;&#13;
+    float:left;&#13;
+    margin-right: 8px;&#13;
+}&#13;
+&#13;
+input[name="q"] {&#13;
+color: black;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>aneesh-typeahead-search</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+	var lazyLoader = $injector.get("lazyLoader");
+	lazyLoader.putTemplates(scope.data.typeaheadTemplates);
+}]]></link>
+        <name>Aneesh:Type Ahead Search</name>
+        <option_schema>[{"name":"title","section":"Presentation","label":"Title","type":"string"},{"name":"color","section":"Presentation","label":"Color","type":"string"},{"name":"glyph","section":"Presentation","label":"glyph","type":"string"},{"name":"size","section":"Presentation","label":"Size","type":"string"},{"hint":"Number of typeahead search results returned (default 15)","name":"limit","section":"Behavior","label":"Limit","type":"integer"},{"displayValue":"Search Source","hint":"If provided, limit the scope of the typeahead search to the given search sources","name":"contextual_search_sources","display_value_list":[],"section":"Behavior","label":"Contextual Search Sources","type":"glide_list","value":"sp_search_source","ed":{"reference":"sp_search_source"}}]</option_schema>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.EUTSItemIds = [];
+	var EUTSItem = new GlideRecord('sc_cat_item');
+	EUTSItem.addQuery('sys_scope','global');
+	EUTSItem.query();
+	while(EUTSItem.next()){
+		data.EUTSItemIds.push(EUTSItem.getUniqueValue());
+	}
+	if(input && input.action=='getScope' && input.sys_id){
+		var scRecord = new GlideRecord('sc_cat_item');
+		if(scRecord.get(input.sys_id)){
+			data.itemScope = scRecord.getValue('sys_scope');
+		}else{
+			data.itemScope = "error";
+		}
+	}else{
+		if (options.title) {
+			options.title = gs.getMessage(options.title);
+		}
+
+		if (options.refresh_page_on_search_submission == undefined)
+			data.refreshPageOnSearch = true;
+		else
+			data.refreshPageOnSearch = options.refresh_page_on_search_submission;
+
+		data.resultMsg = gs.getMessage("Search results");
+		data.navigationMsg = gs.getMessage("To navigate, use up and down arrow keys while holding ");
+		data.portalID = $sp.getPortalRecord().getUniqueValue();
+		data.searchMsg = gs.getMessage("Search by form name");
+		data.q = $sp.getParameter('q');
+
+		var searchSources;
+		data.searchType = null;
+		data.searchSources = [];
+		/*	if ($sp.getParameter("id") == "search" && $sp.getParameter("t")) {
+			data.searchType = $sp.getParameter("t");
+			searchSources = $sp.getSearchSources(data.portalID);
+		} else {
+			var contextualSearchSourceIDs = options.contextual_search_sources || null;
+			searchSources = [{"id":"sc","sys_id":"c96eb1686721220023c82e08f585efff", "isAdvancedTypeaheadConfig":false},{"id":"kb", "sys_id":"c6170ae86721220023c82e08f585efe6","isAdvancedTypeaheadConfig":true}];// $sp.getSearchSources(data.portalID, contextualSearchSourceIDs);
+		}*/
+
+		data.typeaheadTemplates = {};
+		data.searchSourceConfiguration = {};
+		//searchSources.forEach(function(source) {
+		data.searchSources.push("sc");
+		var sourceTemplateConfiguration = {};
+		sourceTemplateConfiguration.type = "ADVANCED";
+		sourceTemplateConfiguration.template = "euts-sp-typeahead-sc.html";
+		var defaultSearchSourceGR = new GlideRecord("sp_search_source");
+		defaultSearchSourceGR.get("global");
+		data.typeaheadTemplates["euts-sp-typeahead-sc.html"] = $sp.translateTemplate(defaultSearchSourceGR.getValue('typeahead_template'));
+		data.searchSourceConfiguration.sc = sourceTemplateConfiguration;
+		data.searchSources.push("kb");
+		var kbSourceTemplateConfiguration = {};
+		kbSourceTemplateConfiguration.type = "SIMPLE";
+		kbSourceTemplateConfiguration.glyph = "file-text-o";
+		kbSourceTemplateConfiguration.linkToPage = "euts_kb_article_view";
+		data.searchSourceConfiguration.kb = kbSourceTemplateConfiguration;
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 13:21:29</sys_created_on>
+        <sys_id>5e9ace272f22301097bc18aa2799b61f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Aneesh:Type Ahead Search</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_5e9ace272f22301097bc18aa2799b61f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:48:51</sys_updated_on>
+        <template><![CDATA[<form ng-submit="c.submitSearch()">
+  <input type="hidden" name="id" value="search"/>
+  <input type="hidden" name="t" value="{{c.searchType}}"/>
+  <div class="input-group input-group-{{::c.options.size}}">
+    <!-- uses ui.bootstrap.typeahead -->
+    <input name="q" type="text" placeholder="{{::c.options.title}}" ng-model="c.searchTerm"
+           autocomplete="off"
+           uib-typeahead="item as item.primary for item in c.getResults($viewValue)"
+           typeahead-wait-ms="250"
+           typeahead-focus-first="false"
+           typeahead-on-select="c.onSelect($item, $model, $label)"
+           typeahead-template-url="euts-sp-typeahead.html"
+           typeahead-popup-template-url="euts-sp-typeahead-popup.html"
+           class="form-control input-typeahead"
+           role="textbox"
+           aria-label="{{::c.options.title}}" tabindex="0" aria-haspopup="true">
+    <span class="input-group-btn">
+      <button name="search" type="submit" class="btn btn-{{::c.options.color}}"
+              title="{{::c.data.searchMsg}}" aria-label="{{::c.data.searchMsg}}">
+    	<i ng-if="::c.options.glyph" class="fa fa-{{::c.options.glyph}}"></i>
+      </button>
+    </span>
+  </div>
+</form>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a108ca0000001</claim_timestamp>
+        <metadata_update_name>sp_widget_5e9ace272f22301097bc18aa2799b61f</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:48:51</sys_created_on>
+        <sys_id>42503b542f43301097bc18aa2799b6df</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:48:51</sys_updated_on>
+    </sys_claim>
+</record_update>

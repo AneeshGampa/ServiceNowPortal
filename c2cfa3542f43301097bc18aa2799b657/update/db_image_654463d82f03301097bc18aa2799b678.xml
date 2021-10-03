@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format>png</format>
+        <height>225</height>
+        <image>5864eb1c2f03301097bc18aa2799b66d</image>
+        <name>outlook_squared.png</name>
+        <size_bytes>1936</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 13:56:23</sys_created_on>
+        <sys_id>654463d82f03301097bc18aa2799b678</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>outlook_squared.png</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>db_image_654463d82f03301097bc18aa2799b678</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+        <thumbnail/>
+        <width>225</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color>#99ccff</average_image_color>
+        <chunk_size_bytes>700000</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <file_name>image</file_name>
+        <hash>45c16a61b5aa35700ba83661a4e9cc6bd1dd3c3bd05023f665cc73efada97635</hash>
+        <image_height>225</image_height>
+        <image_width>225</image_width>
+        <size_bytes>1936</size_bytes>
+        <size_compressed>1940</size_compressed>
+        <state>available</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 13:56:34</sys_created_on>
+        <sys_id>5864eb1c2f03301097bc18aa2799b66d</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 13:56:34</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>654463d82f03301097bc18aa2799b678</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="5864eb1c2f03301097bc18aa2799b66d">5864eb1c2f03301097bc18aa2799b66d</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 13:56:34</sys_created_on>
+        <sys_id>9864eb1c2f03301097bc18aa2799b66d</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>2576</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="5864eb1c2f03301097bc18aa2799b66d">5864eb1c2f03301097bc18aa2799b66d</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 13:56:34</sys_created_on>
+        <sys_id>1c64eb1c2f03301097bc18aa2799b66d</sys_id>
+    </sys_attachment_doc>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a287760000001</claim_timestamp>
+        <metadata_update_name>db_image_654463d82f03301097bc18aa2799b678</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:29</sys_created_on>
+        <sys_id>4ab033942f43301097bc18aa2799b616</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+    </sys_claim>
+</record_update>

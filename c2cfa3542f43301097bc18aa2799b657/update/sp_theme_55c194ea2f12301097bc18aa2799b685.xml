@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_theme">
+    <sp_theme action="INSERT_OR_UPDATE">
+        <css_variables>$sp-logo-margin-x: 		15px !default;&#13;
+$sp-tagline-color:		$text-color !default;&#13;
+$navbar-inverse-bg: 	#3a3f51 !default;&#13;
+$navbar-inverse-link-color: #bdc0c4 !default;&#13;
+$navbar-inverse-link-hover-color: #ffffff !default;&#13;
+$body-bg: 				#f0f3f4 !default;&#13;
+$dropdown-link-disabled-color: #ccc;&#13;
+ &#13;
+/***START ANNOUNCEMENT STYLE***/&#13;
+.sp-announcement-root .sp-announcement-list .sp-announcement {&#13;
+    padding: 0px;&#13;
+    display: flex;&#13;
+    position: relative;&#13;
+    //border: 4px solid rgba(249, 186, 57, 0.5);&#13;
+    //background-image: linear-gradient(-200deg, #cfd9df 0%, #e2ebf0 100%);&#13;
+    //background-image: linear-gradient(-220deg, #d5d4d0 0%, #DBDAD7 1%, #E3E3E1 31%, #E9E9E7 75%, #EFEEEC 100%);&#13;
+    //background-image: linear-gradient(225deg, #FFFEFF 0%, #FFFEFF 10%, #EEF6FC 90%, #DCEDF9 100%);&#13;
+    //background-color: rgba(244, 211, 94, 0.6) !important;&#13;
+    background-color: #ffffff !important; //F9E69F&#13;
+    background-image: linear-gradient(-220deg, rgba(247, 219, 119, 0.7) 0%, rgba(249, 230, 159, 0.7) 45%,  rgba(250, 238, 198, .85) 85%, rgba(250, 240, 198, .85) 100%);&#13;
+}&#13;
+&#13;
+.sp-announcement-root .sp-announcement-list .content-container div.msg .title {&#13;
+  margin-bottom: 10px;&#13;
+}&#13;
+&#13;
+.sp-announcement-root .sp-announcement-list .content-container div.msg a.info-link {&#13;
+  //color: #292929!important;&#13;
+  font-size: 18px !important;&#13;
+  font-weight: 600;&#13;
+  //background-color: rgba(32, 106, 170, 0.5);&#13;
+  //border-radius: 4px;&#13;
+  //border: 1.5px solid rgba(32, 106, 170, 0.7);&#13;
+  //padding: 1.5px 8px 4px 8px;&#13;
+  //color: #FFFFFF !important;&#13;
+}&#13;
+&#13;
+.sp-announcement-root span.glyphicon.close {&#13;
+    font-size: 18px;&#13;
+}&#13;
+/***END ANNOUNCEMENT STYLE***/&#13;
+&#13;
+&#13;
+&#13;
+&#13;
+</css_variables>
+        <footer/>
+        <footer_fixed>true</footer_fixed>
+        <header display_value="Aneesh Portal Header">e8d42f4e2f32301097bc18aa2799b698</header>
+        <name>My Portal Theme</name>
+        <navbar_fixed>true</navbar_fixed>
+        <sys_class_name>sp_theme</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-02 15:36:22</sys_created_on>
+        <sys_id>55c194ea2f12301097bc18aa2799b685</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>My Portal Theme</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_theme_55c194ea2f12301097bc18aa2799b685</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:19</sys_updated_on>
+    </sp_theme>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a178c60000001</claim_timestamp>
+        <metadata_update_name>sp_theme_55c194ea2f12301097bc18aa2799b685</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:49:19</sys_created_on>
+        <sys_id>0970fb542f43301097bc18aa2799b629</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:19</sys_updated_on>
+    </sys_claim>
+</record_update>

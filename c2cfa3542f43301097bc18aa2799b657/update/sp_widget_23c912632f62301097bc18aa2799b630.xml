@@ -1,0 +1,1378 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($rootScope, $scope, spUtil, $location, $window, $uibModal) {
+  /* widget controller */
+  var c = this;
+	c.originalFilters = angular.copy(c.data.filters);
+	c.currentSortField = "";
+	c.currentSortDirection = "";
+	$scope.data.stopLoader = true;
+	
+	spUtil.getPreference('glide.ui.accessibility', function(value) {
+		if (value == "true")
+			$scope.tabindex = 0;
+		else
+			$scope.tabindex = -1;
+	});
+
+	c.filterHasSelected = function(options){
+		for(var i = 0; i < options.length; i++){
+			if(options[i].value) return true;
+		}
+		return false;
+	};
+
+	c.matchesSaved = function(){
+		return angular.equals(c.originalFilters, c.data.filters);
+	};
+
+	function refreshItems() {
+		var input = {
+			'action': 'refresh',
+			'filters': c.data.filters,
+			'sortField': c.currentSortField,
+			'sortDirection': c.currentSortDirection,
+			'currentLimit': $scope.data.limit
+		}
+		c.server.get(input).then(function(r) {
+			c.data.total_items = r.data.total_items;
+			c.data.currentFilterQuery = r.data.currentFilterQuery;
+			c.data.items = r.data.items;
+			c.data.appItems = r.data.appItems;
+			broadcastUpdatedItemList();
+			console.log(c.data.appItems);
+		});
+	}
+
+	$scope.filterItems = function(filter) {
+		filter.value = !filter.value;
+		refreshItems();
+	};
+
+	c.saveFilters = function(){
+		c.originalFilters = angular.copy(c.data.filters);
+		spUtil.setPreference('appstore-filters', JSON.stringify(c.data.filters));
+	};
+
+	$scope.removeFilters = function(){
+		for(var i = 0; i < c.data.filters.length; i++){
+			for(var j = 0; j < c.data.filters[i].options.length; j++){
+				if(c.data.filters[i].id == 'approvedAppFilters' && c.data.filters[i].options[j].name == 'Approved'){
+					c.data.filters[i].options[j].value = true;
+				}else if(c.data.filters[i].options[j].value){
+					c.data.filters[i].options[j].value = false;
+				}
+			}
+		}
+		refreshItems();
+	};
+
+	$scope.sortItems = function(filter) {
+		if(filter.sortField == c.currentSortField){
+			filter.sortDirection = filter.sortDirection == 'A' ? 'D' : 'A';
+		}else{
+			filter.value = true;
+			for (var i = 0; i < c.data.sortFilters.length; i++) {
+				if (c.data.sortFilters[i] != filter) {
+					c.data.sortFilters[i].value = false;
+				}
+			}
+		}
+		if (filter.name) {
+			c.currentSortField = filter.sortField;
+			c.currentSortDirection = filter.sortDirection;
+		} else {
+			c.currentSortField = "";
+			c.currentSortDirection = "";
+		}
+		refreshItems();
+	};
+
+	function broadcastUpdatedItemList() {
+		//broadcast the items list updated to embedded card widget
+		var obj = {
+			updatedAppItemsList: c.data.items
+		};
+		$rootScope.$broadcast('appItemsListUpdatedEvent', obj);
+	}
+
+	$scope.loadMore = function() {
+		$scope.data.new_limit = $scope.data.limit + ($scope.options.limit_item || 18);
+		$scope.data.stopLoader = false;
+		var input = {
+			'action': 'loadMore',
+			'filters': c.data.filters,
+			'sortField': c.currentSortField,
+			'sortDirection': c.currentSortDirection,
+			'currentLimit': $scope.data.limit,
+			'newLimit': $scope.data.new_limit,
+			'items': $scope.data.items
+		}
+		c.server.get(input).then(function(r) {
+			c.data.total_items = r.data.total_items;
+			c.data.items = c.data.items.concat(r.data.items);
+			c.data.currentFilterQuery = r.data.currentFilterQuery;
+			$scope.data.limit = $scope.data.new_limit;
+			$scope.data.stopLoader = true;
+			broadcastUpdatedItemList();
+		});
+	};
+
+	/*=============== Begin link handling ===============*/
+	$scope.changeView = function(view) {
+		spUtil.setPreference('catalog-item-list-view', view)
+		$scope.view = view;
+	};
+
+	spUtil.getPreference('catalog-item-list-view', function(value) {
+		$scope.view = value || 'card';
+	});
+
+	$scope.isTouchDevice = function() {
+		return ('ontouchstart' in $window);
+	};	
+
+	$scope.startItemList = function() {
+		$scope.data.stopLoader = true;
+	};
+
+	$scope.getDetails = function(appKeyId) {
+		$location.url('?id=euts_appstore_app_details&appKeyId=' + appKeyId);
+	};
+
+	c.openModal = function(reco, lastEvent) {
+		$scope.reco = reco;
+		
+		c.modalInstance = $uibModal.open({
+			templateUrl: 'parentAppDetailsModalTemplate',
+			scope: $scope
+		});
+		c.requestApp = function() {
+			$location.url('?id=euts_appstore_app_details&appKeyId=' + reco.applicationId);
+		};
+	};
+
+	c.closeModal = function() {
+		c.modalInstance.close();
+	};
+
+	c.modalInstanceCtrl = function($scope, $uibModalInstance, reco, lastEvent) {
+		$scope.reco = reco;
+		$scope.lastEvent = lastEvent;
+	};
+
+	$('#card-container').hover(
+		function() {
+			$(this).find('.card-style').hover(
+				function() {
+					$(this).find('#heart-icon').hover(
+						function() {
+							$(this).toggleClass('fa fa-heart-o fa fa-heart')
+						}
+					)
+				}
+			)
+		}
+	);
+
+	$('#card-container').hover(
+		function() {
+			$(this).find('.card-style').hover(
+				function() {
+					$(this).find('#heart-icon').click(
+						function() {
+							$(this).removeClass('fa fa-heart-o')
+						},
+						function() {
+							$(this).addClass('fa fa-heart')
+						},
+						function() {
+							$(this).toggleClass('heart-animated')
+						}
+					)
+				}
+			)
+		}
+	);
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.top-sort-panel {&#13;
+  border-top: none !important;&#13;
+  border-left: none !important;&#13;
+  border-right: none !important;&#13;
+  border-bottom: 1px solid #ddd;&#13;
+}&#13;
+&#13;
+.bottom-sort-panel {&#13;
+  //border-top: none !important;&#13;
+  border-left: none !important;&#13;
+  border-right: none !important;&#13;
+  border-bottom: none !important;&#13;
+}&#13;
+&#13;
+.panel{&#13;
+  border-radius: 0 0 0 0;&#13;
+  border: 1px solid #DDDDDD;&#13;
+  border-bottom :0px;&#13;
+  margin-bottom:0px;&#13;
+}&#13;
+.panel-heading{&#13;
+  padding: 9px 15px;&#13;
+  margin-bottom:0px;&#13;
+  border-bottom :0px;&#13;
+}&#13;
+&#13;
+.clear-all{&#13;
+  float:right;&#13;
+  cursor: pointer;&#13;
+  display: inline-block;&#13;
+  margin-right: 20px;&#13;
+}&#13;
+&#13;
+.kb-breadcrumb{&#13;
+  margin-bottom: -3px;&#13;
+}&#13;
+&#13;
+.sorting{&#13;
+  margin-top:4px;&#13;
+  text-align: right;&#13;
+}&#13;
+.count{&#13;
+  //font-size: 16px;&#13;
+}&#13;
+.sort-label{&#13;
+  //font-size: 13px;&#13;
+}&#13;
+&#13;
+.sort-option:hover {&#13;
+  color: #3a3f51;&#13;
+}&#13;
+&#13;
+.sort-option.active {&#13;
+  text-decoration: underline;&#13;
+  color: #3a3f51;&#13;
+}&#13;
+&#13;
+.text b{&#13;
+  font-weight:600; &#13;
+}&#13;
+.results-title{&#13;
+  font-size: 16px;&#13;
+  margin-top: 3px;&#13;
+  margin-bottom: 0px;&#13;
+}&#13;
+.sort-list{&#13;
+  display: -webkit-inline-box; &#13;
+}&#13;
+.sort-icon{&#13;
+  top:4px; &#13;
+}&#13;
+.inline{&#13;
+  display:inline-flex; &#13;
+}&#13;
+.pipe{&#13;
+  padding: 0 7px;&#13;
+}&#13;
+.list-inline{&#13;
+  display:inline-flex;&#13;
+  margin-bottom: 0px; &#13;
+}&#13;
+.list-inline &gt; li{&#13;
+  display:inline-flex;&#13;
+  padding-left: 7px;&#13;
+  padding-right: 7px;&#13;
+}&#13;
+a:hover ,a.active{&#13;
+  color: #000000;&#13;
+}&#13;
+.order-icons{&#13;
+  padding: 0 0 0 5px;&#13;
+}&#13;
+&#13;
+.save-button{&#13;
+  color:#206AAA;&#13;
+  cursor: pointer;&#13;
+  font-size: 1.3em !important;&#13;
+  vertical-align: text-bottom !important;&#13;
+}&#13;
+.save-button2{&#13;
+  color:#ccc;&#13;
+  //cursor: pointer;&#13;
+}&#13;
+&#13;
+.icon {&#13;
+  // cursor: pointer;&#13;
+  vertical-align: middle;&#13;
+  font-size: 1.4em;&#13;
+  padding-right: 5px;&#13;
+}&#13;
+&#13;
+.delete-icon {&#13;
+  color: #d96459;&#13;
+  //font-size: 1.1em;&#13;
+  cursor: pointer;&#13;
+}&#13;
+&#13;
+.retired-app-icon {&#13;
+  cursor: help;&#13;
+  padding-left: 5px;&#13;
+  font-weight: 600;&#13;
+  margin-top: auto;&#13;
+  margin-bottom: auto;&#13;
+  font-size: 14.5px;&#13;
+}&#13;
+&#13;
+.kb-breadcrumb-item {&#13;
+  margin: 0 5px 3px 0;&#13;
+  display: inline-block;&#13;
+  position: relative;&#13;
+  padding-right: 16px;&#13;
+}&#13;
+&#13;
+.kb-breadcrumb-item2 {&#13;
+  margin: 0 10px 3px 0;&#13;
+  display: inline-block;&#13;
+  position: relative;&#13;
+  padding-right: 16px;&#13;
+}&#13;
+&#13;
+.kb-breadcrumb-item2 a{&#13;
+  color:#3a3f51;&#13;
+}&#13;
+&#13;
+.kb-breadcrumb-item a{&#13;
+  color:#3a3f51;&#13;
+}&#13;
+&#13;
+.cross-tag::before {&#13;
+  transform: rotate(45deg);&#13;
+}&#13;
+.cross-tag::after {&#13;
+  transform: rotate(-45deg);&#13;
+}&#13;
+.cross-tag::after, .cross-tag::before {&#13;
+  position: absolute;&#13;
+  right: 5.5px;&#13;
+  content: " ";&#13;
+  height: 13px;&#13;
+  width: 2px;&#13;
+  background-color: #206aaa;&#13;
+  top: 5px;&#13;
+}&#13;
+&#13;
+#appPicker-container {&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+.toggle {&#13;
+  color: #ccc;&#13;
+}&#13;
+&#13;
+.view-toggle-buttons-col {&#13;
+  margin-top: -53px;&#13;
+  padding-right: 3.7%;&#13;
+}&#13;
+&#13;
+.view-toggle-button {&#13;
+  font-size: 1.3em !important;&#13;
+}&#13;
+&#13;
+.fa.active {&#13;
+  color: #428bca;&#13;
+}&#13;
+&#13;
+.m-r-sm {&#13;
+  margin-right: 10px !important;&#13;
+}&#13;
+&#13;
+.m-l-sm {&#13;
+  margin-left: 10px !important;&#13;
+}&#13;
+&#13;
+/******Start Filters Style*****/&#13;
+#filters-column {&#13;
+  //width: 21.66667%;&#13;
+  width: 18.16667%;&#13;
+  padding-bottom: 11%;&#13;
+  border-right: 1px solid #ddd;&#13;
+}&#13;
+&#13;
+.filter-title {&#13;
+  color: #717171;&#13;
+  font-size: 1.25em;&#13;
+  font-weight: 550;&#13;
+  border-bottom: 1px solid #ddd;&#13;
+  margin-bottom: .75em;&#13;
+}&#13;
+&#13;
+#filter-parent-row {&#13;
+  margin-bottom: 3px;&#13;
+  padding-left: 10px;&#13;
+  padding-right: 15px;&#13;
+  //background-color: #fff;&#13;
+  //box-shadow: 0 4px 14px rgba(56, 96, 92, .08);&#13;
+}&#13;
+&#13;
+#sort-filters {&#13;
+  margin-top: 8px;&#13;
+}&#13;
+/*****End Filters Style*****/&#13;
+&#13;
+&#13;
+.item-table {&#13;
+  background-color: #fff;&#13;
+&#13;
+  tr {&#13;
+&#13;
+    th {&#13;
+      padding: 16px 10px;&#13;
+    }&#13;
+&#13;
+    td {&#13;
+      padding: 16px 10px;&#13;
+      border: none;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+&#13;
+/****Start Load More Style*****/&#13;
+.btn-loadmore {&#13;
+  margin-left: auto;&#13;
+  margin-right: auto;&#13;
+  display: block;&#13;
+  margin-bottom: 20px;&#13;
+}&#13;
+/*****End Load More Style****/&#13;
+&#13;
+&#13;
+/****Start Cards Style****/&#13;
+#cards-column {&#13;
+  width: 81.83333%;&#13;
+}&#13;
+&#13;
+&#13;
+&#13;
+.padu-image {&#13;
+  height: 1.8em;&#13;
+  margin-top: 7px;&#13;
+}&#13;
+&#13;
+&#13;
+/*****Start Table View Style*****/&#13;
+#table-border {&#13;
+  border: 1px solid #ddd;&#13;
+  border-radius: 4px;&#13;
+  border-collapse: separate;&#13;
+  border-spacing: 0;&#13;
+}&#13;
+&#13;
+#table-header {&#13;
+  background-color: #428bca;&#13;
+  color: #ffffff;&#13;
+  border: 1px solid #428bca;&#13;
+  border-radius: 4px;&#13;
+  //border-top-right-radius: 4px;&#13;
+  //border-top-left-radius: 4px;&#13;
+}&#13;
+&#13;
+.unapproved-grid-style {&#13;
+  background-color: rgba(168, 32, 32, .045) !important;&#13;
+}&#13;
+&#13;
+.unapproved-grid-style &gt; td {&#13;
+  border-top: 1px solid rgba(255, 126, 107, .3) !important;&#13;
+  border-bottom: 1px solid rgba(255, 126, 107, .3) !important;&#13;
+}&#13;
+&#13;
+.table &gt; thead &gt; tr &gt; th {&#13;
+  vertical-align: bottom;&#13;
+  border-bottom: none;&#13;
+  font-weight: 550;&#13;
+  font-size: 18px;&#13;
+  padding: 12px 10px;&#13;
+}&#13;
+&#13;
+#th-left {&#13;
+  border-top-left-radius: 3px;&#13;
+}&#13;
+&#13;
+#th-right {&#13;
+  border-top-right-radius: 3px;&#13;
+}&#13;
+&#13;
+#tr-border {&#13;
+  height: 57px;&#13;
+  border: 1px solid #428bca;&#13;
+  border-radius: 4px;&#13;
+}&#13;
+&#13;
+.fa-stack {&#13;
+  display: inline-flex !important;&#13;
+}&#13;
+&#13;
+.app-name {&#13;
+  display:inline-block;&#13;
+}&#13;
+&#13;
+.item-image {&#13;
+  width: 80%;&#13;
+  display: flex;&#13;
+  margin-left: auto;&#13;
+  margin-right: auto;&#13;
+}&#13;
+&#13;
+.align-middle {&#13;
+  vertical-align: middle;&#13;
+}&#13;
+&#13;
+.catInfo {&#13;
+  font-size: 18px;&#13;
+  font-weight: normal;&#13;
+  color: #3B5998;&#13;
+}&#13;
+&#13;
+.catEdit {&#13;
+  font-size: 18px;&#13;
+  font-weight: normal;&#13;
+  color: #a4c639;&#13;
+}&#13;
+&#13;
+&#13;
+#edit-icon-padding {&#13;
+  padding-right: 14px;&#13;
+}&#13;
+&#13;
+&#13;
+/*****End Table View Style*****/&#13;
+&#13;
+/*****Start Heart Favorite Button*****/&#13;
+#heart-icon {&#13;
+  float: right;&#13;
+  color: #2d4039;&#13;
+  z-index: 10;&#13;
+&#13;
+}&#13;
+&#13;
+#heart-icon:hover {&#13;
+  cursor: pointer;&#13;
+  color: red; &#13;
+}&#13;
+&#13;
+.heart-animated {&#13;
+  color: red;&#13;
+  transition: all .085s ease-in-out;&#13;
+  transform: scale(1.2);&#13;
+}&#13;
+/*****End Heart Favorite Button*****/&#13;
+&#13;
+/*****Start Responsive Sizing*****/&#13;
+.distributed-row {&#13;
+  display: -webkit-box;&#13;
+  display: -webkit-flex;&#13;
+  display: -ms-flexbox;&#13;
+  display:         flex;&#13;
+  flex-wrap: wrap;&#13;
+}&#13;
+.distributed-row &gt; [class*='col-'] {&#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+}&#13;
+&#13;
+.distributed-row-content-wrapper {&#13;
+  height: 100%;&#13;
+  position: relative;&#13;
+  display: flex;&#13;
+}&#13;
+&#13;
+.distributed-row-content {&#13;
+  position: relative;&#13;
+  margin-top: auto;&#13;
+  margin-bottom: auto;&#13;
+}&#13;
+&#13;
+//AppPicker widget Container&#13;
+@media screen and (max-width:1712px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//App Cards Column&#13;
+@media screen and (max-width:1338px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//iphone md&#13;
+@media screen and (max-width:750px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//iphone sm&#13;
+@media screen and (max-width:640px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//Android md&#13;
+@media screen and (max-width:1440px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//Android sm&#13;
+@media screen and (max-width:1080px;) {&#13;
+&#13;
+}&#13;
+&#13;
+//Tablet&#13;
+@media screen and (max-width:1536px;) {&#13;
+&#13;
+}&#13;
+/*****End Responsive Sizing*****/</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>appstore-apppicker</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>AppStore AppPicker</name>
+        <option_schema>[{"name":"color","section":"other","default_value":"white","label":"color","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	if (!input) {	
+		data.q = $sp.getParameter('q');
+		data.stopLoader = true;
+		data.isSearch = false;
+		//data.showBlacklistFilter = gs.getUser().isMemberOf('f9760df91b2b605c22532f46624bcb7b'); //AppStore_View_Hidden
+		var sortFilters = data.sortFilters = [
+			{
+				"name": "Newest",
+				"value": false,
+				"sortField": "source_id",
+				"sortDirection": "D"
+			},
+			{
+				"name": "Name",
+				"value": false,
+				"sortField": "application_name",
+				"sortDirection": "A"
+			}, 
+			{
+				"name": "Vendor",
+				"value": false,
+				"sortField": "vendor_name",
+				"sortDirection": "A"
+			}, 
+			{
+				"name": "Sofware Functionality",
+				"value": false,
+				"sortField": "software_functionality",
+				"sortDirection": "A"
+			}
+		]; 
+		var userPref = gs.getUser().getPreference('appstore-filters');
+		data.filters = userPref ? JSON.parse(userPref) : [
+			{
+				id: 'PADUfilters',
+				title: 'PADU Rating',
+				label: 'PADU',
+				avsQuery: 'u_padu_status=',
+				OR: 'OR',
+				options: [{
+					"name": "Preferred",
+					"value": false,
+					'avs': '1'
+				}, {
+					"name": "Acceptable",
+					"value": false,
+					'avs': '2'
+				}, {
+					"name": "Discouraged",
+					"value": false,
+					'avs': '3'
+				}, {
+					"name": "Unnacceptable",
+					"value": false,
+					'avs': '4'
+				}, {
+					"name": "Not Rated",
+					"value": false,
+					'avs': '5'
+				}]
+			},
+			{
+				id: 'OSFilters',
+				title: 'Operating System',
+				label: 'OS',
+				avsQuery: 'current_operating_systemsLIKE',
+				OR: 'OR',
+				options:[{
+					"name": "Windows 10 SAR",
+					"value": false,
+					'avs': "4ad1b7c74f30070031f9f7e18110c7a9"
+				}, {
+					"name": "Windows 7",
+					"value": false,
+					'avs': "1fa1f78b4f30070031f9f7e18110c7b8"
+				}, { 
+					"name": "Big Sur",
+					"value": false,
+					'avs': 'd1fc3c711bbb149cdac9b9d1cd4bcbac'
+				}, {
+					"name": "Catalina",
+					"value": false,
+					'avs': 'b7388298db8cc890ea7169c3ca96196b'
+				}, {
+					"name": "Mojave",
+					"value": false,
+					'avs': '157f659cdba4e3807b765e25ca961917'
+				}, {
+					"name": "Citrix",
+					"value": false,
+					'avs': 'b622bf8b4f30070031f9f7e18110c70e'
+				}]
+			},
+			{
+				id: 'licenseFilters',
+				label:  'Vendor or Internal',
+				title: 'Vendor or Internal App',
+				avsQuery: 'vendor_or_internal_software=',
+				OR: 'OR',
+				options:[{
+					"name": "Vendor App",
+					"value": false,
+					'avs': 'V'
+				}, {
+					"name": "Internal App",
+					"value": false,
+					'avs': 'I'
+				}]
+			},
+			{
+				id: 'approvedAppFilters',
+				label:  'App Status',
+				title: 'Application Approval Status',
+				avsQuery: '',
+				OR: 'OR',
+				options:[{
+					"name": "Approved",
+					"value": true,
+					'avs': 'approved_app=1^u_appstorehide=0'
+				}, {
+					"name": "Unapproved/Not Requestable",
+					"value": false,
+					'avs': 'approved_app=0^ORu_appstorehide=1'
+				}]
+			},
+			{
+				id: 'appTypeFilters',
+				label:  '',
+				title: 'SAW or VDI',
+				avsQuery: '',
+				OR: '',
+				options:[{
+					"name": "SAW",
+					"value": false,
+					'avs': 'u_issaw=1'
+				}, {
+					"name": "VDI OnDemand",
+					"value": false,
+					'avs': 'u_vdinfrastatus=Yes'
+				}]
+			},
+			{
+				id: 'licenFilters',
+				label:  'License',
+				title: 'License Required',
+				avsQuery: '',
+				OR: 'OR',
+				options:[{
+					"name": "Yes (US)",
+					"value": false,
+					'avs': 'license_typeIN12,13,17,14,8'
+				}, {
+					"name": "No (US)",
+					"value": false,
+					'avs': 'license_typeIN1,5,2,3,4,18,9,10,6,7,11,15,16'
+				},{
+					"name": "Yes (non-US)",
+					"value": false,
+					'avs': 'license_typeIN12,13,17,14,8,16'
+				},{
+					"name": "No (non-US)",
+					"value": false,
+					'avs': 'license_typeIN1,5,2,3,4,18,9,10,6,7,11,15'
+				}
+								]
+			},
+			{ 
+				id: 'blacklistFilters',
+				label:  '',
+				title: 'Blacklisted',
+				avsQuery: '',
+				OR: 'OR',
+				options:[{
+					"name":"Blacklisted Apps",
+					"value": false,
+					"avs": "u_blacklisted=1"
+				}]
+			}
+		];
+		data.currentFilterQuery = getCurrentFilterQuery(data.filters);
+		if(data.currentFilterQuery == 'approved_app=1^u_appstorehide=0^u_blacklisted!=1') { //Add the user's primary device's OS as a filter, but only if the current filter is the default filter
+			/*var grUserSettings = new GlideRecord('x_opt_euts_intake_euts_intake_user_settings');
+			if (grUserSettings.get('u_user', gs.getUserID())) {
+				var grUserDevice = new GlideRecord('x_opt_euts_intake_euts_user_devices');
+				if (grUserSettings.getValue('u_primary_device') && grUserDevice.get('u_device_name', grUserSettings.getValue('u_primary_device'))) {
+					if(grUserDevice.getValue('u_operating_system')) {
+						for (var i = 0; i < data.filters.length; i++) {
+							if (data.filters[i].id =='OSFilters') {
+								for (var j = 0; j < data.filters[i].options.length; j++) {
+									if (grUserDevice.getValue('u_operating_system').indexOf(data.filters[i].options[j].name) > -1) {
+										data.filters[i].options[j].value = true;
+										data.currentFilterQuery = getCurrentFilterQuery(data.filters);
+										break;
+									}
+								}
+								break;
+							}
+						}
+					}
+				}
+			}*/
+		}
+		data.limit = options.limit_item ? options.limit_item : 18;
+		data.items = [];
+		getResults(false, 'IR_AND_QUERY');
+		if(data.items.length == 0 && String($sp.getParameter('q')).split(' ').length > 1){
+			getResults(false, 'IR_OR_QUERY');
+		}
+	} else {
+		data.filters = input.filters;
+		data.currentFilterQuery = getCurrentFilterQuery(data.filters);
+		getResults(input, 'IR_AND_QUERY');
+		if(data.items.length == 0  && String($sp.getParameter('q')).split(' ').length > 1){
+			getResults(input, 'IR_OR_QUERY');
+		}
+	}
+
+	function getResults(input, queryMode) {
+		data.appItems = {};
+		data.items = [];
+		var appItems = [];
+		data.q = $sp.getParameter('q');
+		data.isSearch = data.q ? 'true' : 'false';
+		var catItems = data.catItems = {};
+		data.currentLimit = input.currentLimit || 18;
+		data.newLimit = input && input.newLimit ? input.newLimit : data.currentLimit;
+		var count = 0;
+		var keywordQueryCount = 0;
+		var appNameQueryCount = 0;
+		var aggApps = new GlideAggregate('u_x_opt_euts_intake_euts_avs');
+		aggApps.addEncodedQuery('application_name!=delete^u_padu_statusISNOTEMPTY');
+		if(data.currentFilterQuery){
+			aggApps.addEncodedQuery(data.currentFilterQuery);
+		}
+		if(data.q){
+			aggApps.addQuery(queryMode, data.q);
+			if(queryMode == 'IR_AND_QUERY'){
+				aggApps.addEncodedQuery('application_nameNOT LIKE'+data.q);
+			}else{
+				var words3 = String(data.q).split(' ');
+				var query3 = 'application_nameNOT LIKE'+words3[0];
+				for(var jj = 1; jj < words3.length; jj++){
+					query3 += '^application_nameNOT LIKE'+words3[jj];
+				}
+				aggApps.addEncodedQuery(query3);
+			}
+		} 
+		aggApps.addAggregate('COUNT');
+		aggApps.query();
+		if(aggApps.next()) keywordQueryCount += parseInt(aggApps.getAggregate('COUNT'));
+		if(data.q){
+			var aggApps2 = new GlideAggregate('u_x_opt_euts_intake_euts_avs');
+			aggApps2.addEncodedQuery('application_name!=delete^u_padu_statusISNOTEMPTY');
+			if(data.currentFilterQuery){
+				aggApps2.addEncodedQuery(data.currentFilterQuery);
+			}
+			var query = '';
+			if(queryMode == 'IR_OR_QUERY'){
+				var words2 = String(data.q).split(' ');
+				query = 'application_nameLIKE'+words2[0];
+				for(var ii = 1; ii < words2.length; ii++){
+					query += '^ORapplication_nameLIKE'+words2[ii];
+				}
+			}else{
+				query = 'application_nameLIKE' + data.q;
+			}
+			aggApps2.addQuery(query);
+			aggApps2.addAggregate('COUNT');
+			aggApps2.query();
+			if(aggApps2.next()) appNameQueryCount += parseInt(aggApps2.getAggregate('COUNT'));
+		}
+		data.total_items = keywordQueryCount + appNameQueryCount;
+		if (!data.q || (input && input.sortField != "")){
+			search(count, '', false, queryMode);
+		}else{
+			for(var i = 1; i <= 12; i++){
+				if(count >= 18 && data.newLimit <= 0){
+					break;
+				}
+				var PADU = (i == 6 || i == 12) ? '' : (i <= 5) ? i.toString() : (i-6).toString(); 
+				var searchTitleOnly = (i <= 6) ? true : false;
+				count = search(count, PADU, searchTitleOnly, queryMode);
+			}
+		}
+		if (!input || input.action != 'loadMore') {
+			data.appItems.apps = data.items;
+		} else {
+			var arrayUtil = new global.ArrayUtil();
+			data.appItems.apps = (input.items && input.items.length > 0) ? arrayUtil.union(input.items, data.items) : data.items;
+		}
+	}
+
+	function search(count, PADU, searchTitleOnly, queryMode){
+		var apps = new GlideRecord('u_x_opt_euts_intake_euts_avs');
+		apps.addEncodedQuery('application_name!=delete');
+		if(data.currentFilterQuery){
+			apps.addEncodedQuery(data.currentFilterQuery);
+		}
+		if (input && input.sortField != "") {
+			apps.addEncodedQuery('u_padu_statusISNOTEMPTY');
+			if (input.sortDirection && input.sortDirection == "A") {
+				apps.orderBy(input.sortField);
+			} else {
+				apps.orderByDesc(input.sortField);
+			}
+			if(data.q) apps.addQuery(queryMode, data.q);
+		}else{
+			if(data.q){
+				apps.addEncodedQuery('u_padu_status='+PADU);
+				if(searchTitleOnly){
+					if(queryMode == 'IR_AND_QUERY'){
+						apps.addEncodedQuery('application_nameLIKE'+data.q);
+					}else{
+						var words = String(data.q).split(' ');
+						var query = 'application_nameLIKE'+words[0];
+						for(var i = 1; i < words.length; i++){
+							query += '^ORapplication_nameLIKE'+words[i];
+						}
+						apps.addEncodedQuery(query);
+					}
+					apps.orderByDesc('source_id');
+				}else{
+					if(queryMode == 'IR_AND_QUERY'){
+						apps.addEncodedQuery('application_nameNOT LIKE'+data.q);
+					}else{
+						var words2 = String(data.q).split(' ');
+						var query2 = 'application_nameNOT LIKE'+words2[0];
+						for(var j = 1; j < words2.length; j++){
+							query2 += '^application_nameNOT LIKE'+words2[j];
+						}
+						apps.addEncodedQuery(query2);
+					}
+					apps.addQuery(queryMode, data.q);
+				}
+			}else{
+				apps.addEncodedQuery('u_padu_statusISNOTEMPTY');
+				apps.orderBy('u_padu_status');
+				apps.orderByDesc('source_id');
+			}
+		}
+		if (input && input.action == 'loadMore') {
+			apps.chooseWindow(data.currentLimit, data.newLimit);
+		} else {
+			var limit = data.currentLimit ? data.currentLimit : 18;
+			apps.chooseWindow(0, limit);
+		}
+		apps.query();
+		var number = apps.getRowCount();
+		while (apps.next()) {
+			count++;
+			var app = {};
+			//app.installNow = apps.getValue('u_install_now');
+			app.applicationName = apps.getDisplayValue('u_application_name');
+			//app.appImage = apps.getDisplayValue('u_app_image');
+			app.applicationId = apps.getDisplayValue('u_application_id');
+			app.vendorName = apps.getDisplayValue('u_vendor_name');
+			//app.softwareFunctionality = apps.getDisplayValue('software_functionality');
+			//app.currentOperatingSystems = apps.getDisplayValue('current_operating_systems');
+			//app.businessPurpose = apps.getDisplayValue('business_purpose');
+			//app.approvedAppOS = apps.approvedappos.toString().slice(0, -1).replaceAll(',', ',  ');
+			app.softwareOwner = apps.getDisplayValue('u_software_owner');
+			app.paduStatus = apps.getDisplayValue('u_padu_status');
+			//app.vendor_or_Internal = apps.getValue('vendor_or_internal_software');
+			app.approvedApp = apps.getValue('u_approved_app');
+			app.appHide = apps.getValue('u_appstorehide');
+			//app.version = apps.getValue('version');
+			/*var policyDef = new GlideRecord('x_opt_euts_intake_policy_definition');
+			policyDef.addQuery('u_select_application.source_id', app.applicationId);
+			policyDef.addEncodedQuery('u_policy_status=Active');
+			policyDef.query();
+			app.isRa = policyDef.hasNext();*/
+			data.items.push(app);
+		}
+		data.currentLimit = data.currentLimit >= number ? data.currentLimit - number : 0;
+		data.newLimit = data.newLimit - number; 
+		return count;
+	}
+
+	function buildQuery(query, values, OR) {
+		var queryString = query + values[0];
+		for (var i = 1; i < values.length; i++) {
+			queryString += "^" + OR + query + values[i];
+		}
+		return queryString;
+	}
+
+	function getCurrentFilterQuery(filters){
+		var queries = [];
+		for(var h = 0; h < filters.length; h++){
+			var filtersArray = [];
+			for(var g = 0; g < filters[h].options.length; g++){
+				if(filters[h].options[g].value){
+					filtersArray.push(filters[h].options[g].avs);
+				}else if(filters[h].id == 'blacklistFilters'){
+					filtersArray.push('u_blacklisted!=1');
+				}
+			}
+			if(filtersArray.length > 0){
+				queries.push(buildQuery(filters[h].avsQuery, filtersArray, filters[h].OR));
+			}
+		}
+		var totalQuery = "";
+		if (queries.length > 0) {
+			totalQuery = queries[0];
+			for (var k = 1; k < queries.length; k++) {
+				totalQuery += "^" + queries[k];
+			}
+		}
+		return queries.length > 0 ? queries.join('^') : '';
+	}
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 14:21:44</sys_created_on>
+        <sys_id>23c912632f62301097bc18aa2799b630</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>AppStore AppPicker</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_23c912632f62301097bc18aa2799b630</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:06</sys_updated_on>
+        <template><![CDATA[<div ng-init="startItemList()">
+
+  <!-- Start of Card View vs. Grid View selector -->
+  <div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-xs-4 view-toggle-buttons-col" ng-if="!isMobile">
+      <div class="pull-right padder-t-sm text-lg toggle" ng-show="!data.error && data.items.length > 0">
+        <i class="fa fa-th view-toggle-button" ng-click="changeView('card')" aria-label="${Card View}"
+           ng-class="{'active' : view == 'card'}" uib-tooltip="${Card View}" tooltip-placement="top"
+           tooltip-enable="!isTouchDevice()" tooltip-append-to-body="true" aria-label="${Card View}"
+           tabindex="0"></i>
+        <span class="m-l-sm m-r-sm view-toggle-button"> | </span>
+        <i class="fa fa-list-ul view-toggle-button" ng-click="changeView('grid')" aria-label="${Grid View}"
+           ng-class="{'active' : view == 'grid'}" uib-tooltip="${Grid View}" tooltip-placement="top"
+           tooltip-enable="!isTouchDevice()" tooltip-append-to-body="true" aria-label="${Grid View}"
+           tabindex="0"></i>
+      </div>
+    </div>
+  </div>
+  <!-- End of Card View vs. Grid View selector -->
+
+  <div class="row" id="appPicker-container">
+
+    <!-- Start of Filters column -->
+    <div class="col-md-2" id="filters-column">
+      <div class="row" id="filter-parent-row">
+
+        <!--Start Filters-->
+        <div class="row">
+          <div ng-repeat="filter in c.data.filters" class="col-md-12">
+            <span ng-if="filter.id != 'blacklistFilters' || data.showBlacklistFilter">
+              <div class="filter-title text-darker" aria-expanded="false" aria-controls="filter.id">
+                {{filter.title}}
+              </div>
+              <div>
+                <label class="filter-check-container" ng-repeat="option in filter.options">
+                  {{::option.name}}
+                  <input id="filter-checkbox" type="checkbox"
+                         ng-checked="option.value" ng-click="filterItems(option)" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </span>
+          </div>
+        </div>
+        <!--End Filters-->
+
+        <!--Start Remove Filters Button-->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="filter-title text-darker" aria-expanded="false"
+                 aria-controls="PADUFilter">
+            </div>
+            <div class="collapse in multi-collapse" id="sort-filters">
+              <button ng-click = 'removeFilters()' class="m-t-xs btn btn-default">Clear Filters</button>
+            </div>
+          </div>
+        </div>
+        <!--End Remove Filters Button-->
+        
+        <div class="text-larger" style="margin-top:12px">
+          <div class="text-bold" style="border-bottom:1px solid #DDD; font-size:18px; margin-bottom:6px;">
+            Legend
+          </div>
+          <span class="text-bold text-red">
+            <span style="font-size:17px;">R</span><span class="text-darker" style="font-weight:500;">: Restricted Application</span>
+          </span>
+          <div style="margin-top:5px">
+          <i class="fa fa-windows os-icon" aria-hidden="true"></i><span class="text-darker" style="font-weight:500;">: Windows Application</span>
+          </div>
+          <div style="margin-top:5px">
+          <i class="fa fa-apple os-icon" aria-hidden="true"></i><span class="text-darker" style="font-weight:500;">: Mac Application</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!-- End of Filters column -->
+
+    <!--Start of Results Column-->
+    <div class="col-md-12" name="app-results-block" id="cards-column">
+
+      <!-- Start of Sorting section -->
+      <div class="panel panel-default text-larger top-sort-panel">
+        <div class="panel-heading">
+          <div class="row content_block no-margin">
+            <div aria-live="assertive" class="count text kb-text-res-padding" class="col-md-5">
+              <p class="results-title">{{data.total_items}} Results</p>
+            </div>
+            <div class="col-md-7">
+              <div class="sorting">
+                <span class="inline">
+                  <span class="text sort-label">Sort By</span>
+                </span>
+                <span class="pipe inline">
+                  |
+                </span>
+                <span class="sort-list inline">
+                  <ul class="list-inline">
+                    <li>
+                      <a ng-class="{'active':c.currentSortField == ''}" class="sort-option text-blue" href="javascript:void(0)" aria-label="Sort by relevance" ng-click="sortItems({})">Relevance</a>
+                    </li>
+                    <li ng-repeat="item in c.data.sortFilters">
+                      <a ng-class="{'active':c.currentSortField == item.sortField}" class="sort-option text-blue" href="javascript:void(0)" aria-label="{{item.name}}" ng-click="sortItems(item)">{{item.name}}</a>
+                      <span class="order-icons" ng-show="c.currentSortField == item.sortField">
+                        <span ng-hide="item.sortDirection == 'D'"><i class="fa fa-caret-up" aria-hidden="true"></i>
+                        </span>
+                        <span  ng-show="item.sortDirection == 'D'"><i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </span>
+                      </span>
+                    </li>
+                  </ul>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End of Sorting section -->
+
+      <!-- Start of Current Filters section -->
+      <div class="panel panel-default text-larger bottom-sort-panel" style="margin-bottom: 10px">
+        <div class="panel-heading">
+          <div class="kb-breadcrumb row">
+            <span  data-tooltip-location="top" data-tooltip="Save current filters"><i class="fa fa-floppy-o icon save-button" title="Save current filters" ng-if="!c.matchesSaved()" ng-click="c.saveFilters()"></i></span>
+            <span><i class="fa fa-floppy-o icon save-button2" title="Save current filters" ng-if="c.matchesSaved()" disabled></i></span>
+            <span ng-repeat="filter in c.data.filters" ng-if="c.filterHasSelected(filter.options)">
+              <span ng-if="filter.label" style="margin-right: 3px;"><strong>{{filter.label}}:</strong></span>
+              <span ng-class="{'kb-breadcrumb-item' : filter.label, 'kb-breadcrumb-item2': !filter.label}" ng-repeat="option in filter.options" ng-if="option.value">
+                <a href="javascript:void(0);" aria-label="${Clear filter for {{option.name}}}" ng-click="filterItems(option)">
+                  <span ng-if="filter.label">{{option.name}}<span class="cross-tag"></span></span>
+                  <span ng-if="!filter.label">
+                    <strong>{{option.name}}</strong>
+                    <span class="cross-tag"></span>
+                  </span>
+                </a>
+              </span>
+              <span ng-if="filter.label" style="margin-right: 5px;"></span>
+            </span>    
+            <a class="clear-all text-blue" href="javascript:void(0)" ng-if="c.data.currentFilterQuery != 'u_blacklisted!=1'" ng-click="removeFilters()">Reset Filters</a>
+          </div>
+        </div>
+      </div>
+      <!-- End of Current Filters section -->
+
+      <div>
+        <!-- Start of No Results section -->
+        <p class="text-darker text-larger" ng-if="data.items.length == 0 && c.data.currentFilterQuery == 'u_approved_app=1^u_appstorehide=0^u_blacklisted!=1'"><!--data.isSearch == 'true'"-->
+          No results for <i>{{ data.q }}</i>. Try checking your spelling or use more
+          general terms
+        </p>
+        <p class="text-darker text-larger" ng-if="data.items.length == 0 && c.data.currentFilterQuery != 'u_approved_app=1^u_appstorehide=0^u_blacklisted!=1'"> <!--data.isSearch == 'false'"-->
+          No results for this filter combination. Try using a different variety
+          of filters
+        </p>
+        <!-- End of No Results section -->
+
+        <!-- Start of Grid View Results section -->
+        <table id="table-border" class="table table-striped item-table" ng-if="view == 'grid' && data.items.length > 0">
+          <thead id="table-header">
+            <tr id="tr-border">
+              <th id="th-left">${App Name}</th>
+              <th id="th-middle">${PADU}</th>
+              <th id="th-middle">${Version}</th>
+              <th id="th-middle">${Vendor}</th>
+              <th id="th-middle">${Functionality}</th>
+              <th id="th-middle">${Operating Systems}</th>
+              <th id="th-right">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in data.items" ng-class="{'unapproved-grid-style' : item.approvedApp == 0 || item.appHide == 1}">
+              <td class="">
+                <div class="distributed-row">
+                  <div class="col-md-2">
+
+                    <img ng-src="{{ item.appImage }}" ng-if="item.appImage" class="item-image" />
+                    <span ng-if="!item.appImage">
+                      <img class="item-image" ng-src="appstore_unknown_trueblue.png" ng-if="item.softwareFunctionality == 'N/A or Unknown'" />
+                      <img class="item-image" ng-src="appstore_dev_tools_trueblue.png" ng-if="item.softwareFunctionality == 'Development Tool'" />
+                      <img class="item-image" ng-src="appstore_claims_processing_trueblue.png" ng-if="item.softwareFunctionality == 'Claims Processing'" />
+                      <img class="item-image" ng-src="appstore_web_dev_trueblue.png" ng-if="item.softwareFunctionality == 'Web Development'" />
+                      <img class="item-image" ng-src="appstore_hardware_driver_trueblue.png" ng-if="item.softwareFunctionality == 'Hardware Drivers'" />
+                      <img class="item-image" ng-src="appstore_web_only_trueblue.png" ng-if="item.softwareFunctionality == 'Web Only - No Install' || item.softwareFunctionality == 'Web Only - Has Install' || item.softwareFunctionality == 'Web Only - Install Pre-Reqs'" />
+                      <img ng-src="appstore_default_icon_trueblue.png" class="item-image" 
+                           ng-if="!item.appImage && item.softwareFunctionality != 'N/A or Unknown' 
+                                  && item.softwareFunctionality != 'Development Tool' && item.softwareFunctionality != 'Claims Processing' && item.softwareFunctionality != 'Web Development'
+                                  && item.softwareFunctionality != 'Web Only - No Install' && item.softwareFunctionality != 'Web Only - Has Install' && item.softwareFunctionality != 'Web Only - Install Pre-Reqs'
+                                  && item.softwareFunctionality != 'Web Development' && item.softwareFunctionality != 'Hardware Drivers'"/>
+                    </span>
+                  </div>
+
+                  <div class="col-md-10">
+                    <div class="break-word distributed-row-content-wrapper">
+                      <a ng-href="?id=euts_appstore_app_details&appKeyId={{item.applicationId}}" class="app-name text-blue distributed-row-content">
+                        {{item.applicationName}}
+                        <span ng-if="item.content_type == 'external'" aria-label="${External Link}">
+                          ➚</span>
+                      </a>
+                      <div ng-if="item.isRa" class="text-red retired-app-icon" data-tooltip="Restricted Application" data-placement="top">
+                        <!--
+<i class="fa fa-exclamation-triangle text-red retired-app-icon" aria-hidden="true"></i>
+-->
+                        R
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="break-word">
+                  <img ng-show="item.paduStatus == 'Preferred'" class="padu-image"
+                       src="1on.png" />
+                  <img ng-show="item.paduStatus == 'Acceptable'" class="padu-image"
+                       src="2on.png" />
+                  <img ng-show="item.paduStatus =='Discouraged'" class="padu-image"
+                       src="3on.png" />
+                  <img ng-show="item.paduStatus == 'Unacceptable'" class="padu-image"
+                       src="4on.png" />
+                </div>
+              </td>
+              <td class="break-word text-darker align-middle">{{ item.version }}</td>
+              <td class="break-word text-darker align-middle">{{ item.vendorName }}</td>
+              <td class="break-word text-darker align-middle">{{ item.softwareFunctionality }}</td>
+              <td class="break-word text-darker align-middle">{{ item.currentOperatingSystems }}</td>
+              <td id="edit-icon-padding">
+                <span class="fa-stack fa-lg">
+                  <a aria-hidden="true"
+                     ng-if="item.sys_class_name != 'sc_cat_item_content' || item.content_type == 'kb' || item.content_type == 'literal'"
+                     ng-click="c.openModalTest(item, $event)" href="javascript:void(0);"
+                     tabindex="-1">
+                    <i data-tooltip="More information" ng-click="c.openModal(item, $event)"
+                       style=" margin-right:6px;" class="fa fa-info-circle catInfo"
+                       data-tooltip-location="top">&#xf05a;</i></a>
+                  <a class="request-icon text-larger text-bold" ng-href="?id=euts_appstore_app_details&appKeyId={{item.applicationId}}"> 
+                    <i ng-if="item.approvedApp == '1' && item.appHide == '0'" data-tooltip="Request App" class="fa fa-Edit" data-tooltip-location="top">&#xf044;</i>
+                    <i ng-if="item.approvedApp == '0' || item.appHide == '1'" data-tooltip="View App" class="fa catEdit" data-tooltip-location="top">&#xf044;</i>
+                  </a>
+                </span>
+              </td>
+              <td ng-if="data.showPrices">{{ item.vendorName }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- End of Grid View Results section -->
+
+        <!-- Start of Card View Results section -->
+        <div ng-show="view == 'card'" style="margin-top: 1px;">
+          <widget id="euts-appstore-app-card" options='data.appItems'></widget>
+        </div>
+        <!-- End of Card View Results section -->
+      </div>
+
+      <!--Start Load More HTML-->
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="text-a-c" ng-if="!data.stopLoader && data.items.length > 0 && !data.error">
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+            <span class="sr-only">${Loading...}</span>
+          </div>
+          <div ng-if="data.items.length > 0 && data.limit < data.total_items">
+            <div class="text-a-c">
+              {{ data.more_msg }}
+            </div>
+            <button class="m-t-xs btn btn-default btn-loadmore" ng-click="loadMore()">
+              ${Show More}
+            </button>
+          </div>
+        </div>
+        <div class="col-md-4" style="text-align: right;">
+        </div>
+      </div>
+      <!--End Load More HTML-->
+
+      <!-- Start of Results Count section -->
+      <div class="row" style="text-align: right;" ng-if="data.items.length > 0">
+        <span style="margin-right: 8px;">Showing
+          <span ng-if="data.limit < data.total_items">{{data.limit}}</span>
+          <span ng-if="data.limit >= data.total_items">{{data.total_items}}</span>
+          out of {{ data.total_items }}</span>
+      </div>
+      <!-- End of Results Count section -->
+
+    </div>
+    <!--End of Results Column-->
+
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a2309e0000001</claim_timestamp>
+        <metadata_update_name>sp_widget_23c912632f62301097bc18aa2799b630</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:06</sys_created_on>
+        <sys_id>a8a0bf542f43301097bc18aa2799b6be</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:06</sys_updated_on>
+    </sys_claim>
+</record_update>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.hero-text .input-group {&#13;
+width: 60%;&#13;
+}&#13;
+/*---------------*/&#13;
+/* The hero image */&#13;
+.hero-image {&#13;
+  height: 50%;&#13;
+  background-position: center;&#13;
+  background-repeat: no-repeat;&#13;
+  background-size: cover;&#13;
+  position: relative;&#13;
+}&#13;
+&#13;
+/* Place text in the middle of the image */&#13;
+.hero-text {&#13;
+  text-align: left;&#13;
+  /*width:50%;*/&#13;
+  //margin-left:50px;&#13;
+  color: #FFFFFF;&#13;
+}&#13;
+&#13;
+#hero-title {&#13;
+  font-size: 36px;&#13;
+  font-weight: 700;&#13;
+}&#13;
+&#13;
+#hero-welcome-text {&#13;
+  font-size: 20px;&#13;
+}&#13;
+&#13;
+.hero-text h2{font-weight:bold;}&#13;
+.typeahead{z-index:1051!important;}&#13;
+//End Nithu's CSS&#13;
+&#13;
+&#13;
+.sp-tagline-color {&#13;
+	color: $sp-tagline-color;&#13;
+}&#13;
+&#13;
+#search-bar {&#13;
+  width: 70vw;&#13;
+  margin-top: 2.5vh;&#13;
+}&#13;
+&#13;
+/*&#13;
+.homepage-search-banner {&#13;
+   background-image: &#13;
+    //linear-gradient(rgba(48, 99, 120, 0.58), rgba(96, 68, 11, 0.58)), //Gray--blue-orange gradient&#13;
+    //linear-gradient(rgba(218, 184, 149, 0.2), rgba(149, 189, 218, 0.2)), //White--blue-orange gradient&#13;
+    //linear-gradient(rgba(188, 150, 113, 0.3), rgba(73, 137, 182, 0.3)), //Dark White--blue-orange gradient&#13;
+     linear-gradient(rgba(188, 150, 113, .53), rgba(73, 137, 182, .53)), //Dark White--blue-orange gradient&#13;
+  //url("phil_banner_65_opaque.png");&#13;
+  //url(euts_sf_main_crpd.jpg);&#13;
+  url(meeting_stickynotes_original.jpg);   &#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  height: 100%;&#13;
+  margin-top: -20px;&#13;
+  margin-left: -20px;&#13;
+  margin-right:-20px;&#13;
+}&#13;
+*/&#13;
+&#13;
+#homepage-search {&#13;
+  padding-top: 6vh;&#13;
+  padding-bottom: 5.5vh;&#13;
+}&#13;
+&#13;
+.wrapper-xl {&#13;
+  padding-left: 35px !important;&#13;
+  padding-right: 35px !important;&#13;
+  padding-bottom: 35px !important;&#13;
+  padding-top: 23px !important;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,short_description</field_list>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Aneesh Banner Search</name>
+        <option_schema>[{"name":"typeahead_search","default_value":"{title: 'How can we help?', size: 'lg', color: 'default'}","section":"Presentation","label":"Typeahead Search","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+data.currentUser=gs.getUserDisplayName();
+	
+data.typeAheadSearch = $sp.getWidget('aneesh-typeahead-search', options.typeahead_search);
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 13:11:22</sys_created_on>
+        <sys_id>36c9822b2f22301097bc18aa2799b662</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Aneesh Banner Search</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_36c9822b2f22301097bc18aa2799b662</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:48:52</sys_updated_on>
+        <template><![CDATA[<div class="homepage-search-banner">
+<div class="row">
+  <div class="col-md-3"> </div>
+<div class="col-md-6">
+<div id="homepage-search"> <!--Was class="hidden-xs wrapper-xl"-->
+  <div> <!--Was class="wrapper-xl"-->
+    <div class="hero-text">
+  	<div id="hero-title" ng-bind="options.title"></div> <!--Was class="text-center text-4x m-b-lg sp-tagline-color"-->
+  	<div ng-if="options.short_description" class="text-center h4 m-b-lg sp-tagline-color" id="homepage-search-text" ng-bind="options.short_description"></div>
+  	<div id="hero-welcome-text">Welcome! {{data.currentUser}} </div>
+      <div id="search-bar">
+    <sp-widget widget="data.typeAheadSearch"/>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+    <div class="col-md-3"> </div>
+  </div> <!--End of Row-->
+</div>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a10d210000001</claim_timestamp>
+        <metadata_update_name>sp_widget_36c9822b2f22301097bc18aa2799b662</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:48:52</sys_created_on>
+        <sys_id>52507b542f43301097bc18aa2799b60b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:48:52</sys_updated_on>
+    </sys_claim>
+</record_update>

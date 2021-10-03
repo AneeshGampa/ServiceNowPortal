@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($http, $rootScope, $scope, spUtil, $location, $timeout, spScUtil, nowAttachmentHandler, $sanitize, $window, $sce, i18n, $log, spAriaUtil, $document, spModal, $q, spAtf, spSCNavStateManager, $uibModal) {
+  /* widget controller */
+  var c = this;
+	
+	$rootScope.$on('appItemsListUpdatedEvent', function(event, obj) {
+		c.data.items = obj.updatedAppItemsList;
+	});
+
+	$scope.getDetails = function(appKeyId) {
+		if (c.data.flag) {
+			c.addUpgradeCounter();
+		}
+		$location.url('?id=euts_appstore_app_details&appKeyId=' + appKeyId);
+	};
+
+	c.modalInstanceCtrl = function($scope, $uibModalInstance, reco, lastEvent) {
+		$scope.reco = reco;
+		$scope.lastEvent = lastEvent;
+		$scope.dismiss = function() {
+			$uibModalInstance.close();
+		};
+		$scope.getDetails = function() {
+			$location.url('?id=euts_appstore_app_details&appKeyId=' + reco.applicationId);
+		};
+	};
+
+	if (c.data.flag) {
+		$rootScope.$on('appUpgradesNewList', function(event, obj) {
+			c.data.items = obj.updatedAppItemsList;
+		});
+	}
+
+	c.addUpgradeCounter = function(){
+		c.server.get({
+			action:"appUpgradeCounter"
+		})
+	}
+
+	/****Start modal script****/
+	//References ng-template modal 'appDetailsModalTemplate'
+	c.openModal = function(reco, lastEvent) {
+		$scope.reco = reco;
+		c.modalInstance = $uibModal.open({
+			//controller: c.modalInstanceCtrl,
+			templateUrl: 'appDetailsModalTemplate',
+			scope: $scope
+		});
+		c.requestApp = function() {
+			$location.url('?id=euts_appstore_app_details&appKeyId=' + reco.applicationId);
+		};
+	};
+
+	c.modalInstanceCtrl = function($scope, $uibModalInstance, reco, lastEvent) {
+		$scope.reco = reco;
+		$scope.lastEvent = lastEvent;
+	};
+
+	c.closeModal = function() {
+		c.modalInstance.close();
+	};
+	/****End modal script****/
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/**** Cards Style ******/&#13;
+.card-style {&#13;
+  background-color: #ffffff;&#13;
+  margin-bottom: 20px;&#13;
+  border : 10px solid #EEEDE8;&#13;
+  border-width : thin;&#13;
+  border-radius: 4px;&#13;
+  height: 150px;&#13;
+  width: 100%;&#13;
+  float: left;&#13;
+  cursor: pointer;&#13;
+  position: relative;&#13;
+  display: grid;&#13;
+  overflow:hidden;&#13;
+  box-shadow: 0 4.5px 11px rgba(128, 140, 150, .15), //56, 96, 92&#13;
+    						0 0 25px rgba(178, 187, 194, .036) inset&#13;
+}&#13;
+&#13;
+.unapproved-card-style {&#13;
+  //background-color: rgba(250, 167, 0, .2);&#13;
+  //background-color: rgba(242, 242, 131, .15);&#13;
+  border: 2.5px solid rgba(255, 126, 107, .5);&#13;
+}&#13;
+&#13;
+.b {&#13;
+  border: 1px solid #dee5e7;&#13;
+}&#13;
+&#13;
+&#13;
+#link-container {&#13;
+  padding: 10px;&#13;
+  height: 100%;&#13;
+&#13;
+}&#13;
+&#13;
+#image-box {&#13;
+  height: 100%;&#13;
+  z-index: 4;&#13;
+  position: static;&#13;
+  padding-top: 10px;&#13;
+}&#13;
+&#13;
+#app-info-box {&#13;
+&#13;
+}&#13;
+&#13;
+.padu-image {&#13;
+  height: 1.8em;&#13;
+  margin-top: 7px;&#13;
+}&#13;
+&#13;
+&#13;
+.item-image {&#13;
+  margin-top: -3px;&#13;
+  max-height: 11rem;&#13;
+  max-width: 75%;&#13;
+  transition: all .3s ease-in-out;&#13;
+}&#13;
+&#13;
+#hover-button {&#13;
+&#13;
+}&#13;
+&#13;
+#overlay-box {&#13;
+  display: none;&#13;
+  visibility: hidden;&#13;
+  transition: visibility .5s, opacity 0.5s linear;&#13;
+  transition: all .5s ease-in-out;&#13;
+  background-image: linear-gradient(60deg, rgba(41, 50, 60, 0) 0%, rgba(72, 85, 99, 0) 100%);&#13;
+}&#13;
+&#13;
+.card-style:hover {&#13;
+&#13;
+  #overlay-box {&#13;
+    transition: all .1s ease-in-out;&#13;
+    //background-image: linear-gradient(60deg, rgba(41, 50, 60, 0.92) 0%, rgba(72, 85, 99, 0.92) 100%);&#13;
+    background-image: linear-gradient(90deg, rgba(72,85,99,.9) 0%, rgba(62,80,91,.9) 50%, rgba(90,108,117,.9) 96%);&#13;
+    visibility: visible;&#13;
+    display: block;&#13;
+    z-index: 5;&#13;
+    height: 100%;&#13;
+    width: 44%;&#13;
+    overflow: hidden;&#13;
+    position: absolute;&#13;
+    margin: -20px;&#13;
+    border-top-right-radius: 3px;&#13;
+    border-bottom-right-radius: 3px;&#13;
+  }&#13;
+&#13;
+  .item-image {&#13;
+    transition: all .3s ease-in-out;&#13;
+    opacity: 0.65;&#13;
+    filter: alpha(opacity=65);&#13;
+  }&#13;
+}&#13;
+&#13;
+#request-button {&#13;
+  margin-left: 20%;&#13;
+  margin-top: 16%;&#13;
+  width: 70%;&#13;
+  box-shadow: 0px 1px 0px 0px #1c1b18;&#13;
+  background-color: rgba(41, 50, 60, 0);&#13;
+  border-radius:15px;&#13;
+  border:2px solid #D8574B; //Was #FF4136;&#13;
+  display:inline-block;&#13;
+  cursor:pointer;&#13;
+  color: #ffffff;&#13;
+  font-size: 14px;&#13;
+  font-weight: 500;&#13;
+  padding: 5px 3px;&#13;
+  text-decoration:none;&#13;
+  text-shadow:0px 1px 0px #ffffff;&#13;
+}&#13;
+&#13;
+#request-button:hover {&#13;
+  background-color: rgba(255, 65, 54, .57);&#13;
+}&#13;
+#request-button:active {&#13;
+  position:relative;&#13;
+  top:1px;&#13;
+}&#13;
+&#13;
+#info-button {&#13;
+  margin-left: 20%;&#13;
+  margin-top: 16%;&#13;
+  width: 70%;&#13;
+  box-shadow: 0px 1px 0px 0px #1c1b18;&#13;
+  background-color: rgba(41, 50, 60, 0);&#13;
+  border-radius:15px;&#13;
+  border:2px solid #1C77C3;&#13;
+  display:inline-block;&#13;
+  cursor:pointer;&#13;
+  color: #ffffff;&#13;
+  font-size: 14px;&#13;
+  font-weight: 500;&#13;
+  padding: 5px 3px;&#13;
+  text-decoration:none;&#13;
+  text-shadow:0px 1px 0px #ffffff;&#13;
+}&#13;
+&#13;
+#info-button:hover {&#13;
+  background-color: rgba(0, 116, 217, .5);&#13;
+}&#13;
+&#13;
+#info-button:active {&#13;
+  position:relative;&#13;
+  top:1px;&#13;
+}&#13;
+&#13;
+.item-name {&#13;
+  overflow:hidden;&#13;
+  text-overflow:ellipsis;&#13;
+  display: -webkit-box;&#13;
+  -webkit-line-clamp: 2;&#13;
+  -webkit-box-orient: vertical;&#13;
+  max-height: 40px;&#13;
+  font-size: 18px;&#13;
+  padding-bottom: 1px;&#13;
+  margin-top: 8px;&#13;
+  margin-bottom: 10px;&#13;
+  font-weight: 600;&#13;
+}&#13;
+&#13;
+.item-attribute {&#13;
+   //margin-bottom: 10px;&#13;
+}&#13;
+&#13;
+.text-muted {&#13;
+  overflow: hidden;&#13;
+  white-space: nowrap;&#13;
+  text-overflow: ellipsis;&#13;
+}&#13;
+&#13;
+.os-icon-div {&#13;
+  padding-top: 5px;&#13;
+  font-size: 1.25em;&#13;
+  display: inline-block;&#13;
+  text-align:right;&#13;
+  width: 100%;&#13;
+}&#13;
+&#13;
+.os-icon {&#13;
+   padding: 0px 2px;&#13;
+}&#13;
+&#13;
+.restricted-app-card {&#13;
+  text-align: right;&#13;
+   display: block;&#13;
+   padding-top: 75px;&#13;
+}&#13;
+&#13;
+&#13;
+[data-tooltip]:before,&#13;
+[data-tooltip]:after {&#13;
+  z-index: 200;&#13;
+  position: absolute;&#13;
+  &#13;
+}&#13;
+/***** End Cardss Style *****/&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>euts-appstore-app-card</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>EUTS AppStore App Card</name>
+        <option_schema>{"options":&#13;
+    {&#13;
+    "apps":[&#13;
+	{&#13;
+		"appKeyId":"1",&#13;
+		"application_name": "Textpad",&#13;
+		"u_padu_status": "Acceptable",&#13;
+		"software_functionality": "Text Editor",&#13;
+		"u_app_image": ""&#13;
+	},&#13;
+	{&#13;
+		"appKeyId":"2",&#13;
+		"application_name": "Textpad2",&#13;
+		"u_padu_status": "Discouraged",&#13;
+		"software_functionality": "Text Editor2",&#13;
+		"u_app_image": ""&#13;
+	}&#13;
+	]&#13;
+}&#13;
+}</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.items={};
+	data.flag=false;
+	if(options && options.apps){
+		data.items=options.apps;
+		data.flag = options.flag || false;
+	}
+	
+	if (input && input.action == "appUpgradeCounter") {
+		var getProperty = new EutsIntakeUtils().getProperty("AppUpgradesClicks");
+		var num = parseInt(getProperty);
+		num++;
+		new EutsIntakeUtils().setProperty('AppUpgradesClicks', num);
+	}
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 17:04:23</sys_created_on>
+        <sys_id>fafeb66b2fa2301097bc18aa2799b670</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>EUTS AppStore App Card</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_fafeb66b2fa2301097bc18aa2799b670</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:58</sys_updated_on>
+        <template><![CDATA[<div class="col-md-4" ng-repeat="item in data.items">
+  <!-- | limitTo:data.new_limit | orderBy:data.sorting"-->
+  <div class="panel-{{::options.color}} card-style" ng-class="{'unapproved-card-style' : item.approvedApp == 0 || item.appHide == 1}" ng-mouseleave="showOverlay()">
+    <div id="link-container">
+      <div class="row">
+        <div class="col-md-4" id="image-box">
+          <div id="overlay-box" class="section animated faster fadeInLeft">
+            <div id="hover-button">
+              <a ng-href="?id=euts_appstore_app_details&appKeyId={{item.applicationId}}" ng-click="getDetails(item.applicationId)">
+              <button id="request-button" ng-if = "item.approvedApp == 1 && item.appHide == 0" >
+                Request App
+              </button>
+              </a>
+              <!--START Added "View App" display logic when app is not approved or when appHide value set to 1-->
+              <button id="request-button" ng-if = "item.approvedApp == 0 || item.appHide == 1" ng-click="getDetails(item.applicationId)">
+                View App
+              </button>
+              <!--END "View App" display logic"-->
+              <button id="info-button" ng-click="c.openModal(item, $event)">
+                More Info
+              </button>
+            </div>
+          </div>
+          <img ng-src="{{ item.appImage }}" ng-if="item.appImage" class="m-r-sm item-image pull-left" />
+          <span ng-if="!item.appImage">
+            <img class="item-image" ng-src="appstore_unknown_trueblue.png" ng-if="item.softwareFunctionality == 'N/A or Unknown'" />
+            <img class="item-image" ng-src="appstore_dev_tools_trueblue.png" ng-if="item.softwareFunctionality == 'Development Tool'" />
+            <img class="item-image" ng-src="appstore_claims_processing_trueblue.png" ng-if="item.softwareFunctionality == 'Claims Processing'" />
+            <img class="item-image" ng-src="appstore_web_dev_trueblue.png" ng-if="item.softwareFunctionality == 'Web Development'" />
+            <img class="item-image" ng-src="appstore_hardware_driver_trueblue.png" ng-if="item.softwareFunctionality == 'Hardware Drivers'" />
+            <img class="item-image" ng-src="appstore_web_only_trueblue.png" ng-if="item.softwareFunctionality == 'Web Only - No Install' || item.softwareFunctionality == 'Web Only - Has Install' || item.softwareFunctionality == 'Web Only - Install Pre-Reqs'" />
+            <img ng-src="appstore_default_icon_trueblue.png" class="m-r-sm item-image pull-left" 
+                 ng-if="!item.appImage && item.softwareFunctionality != 'N/A or Unknown' 
+                        && item.softwareFunctionality != 'Development Tool' && item.softwareFunctionality != 'Claims Processing' && item.softwareFunctionality != 'Web Development'
+                        && item.softwareFunctionality != 'Web Only - No Install' && item.softwareFunctionality != 'Web Only - Has Install' && item.softwareFunctionality != 'Web Only - Install Pre-Reqs'
+                        && item.softwareFunctionality != 'Web Development' && item.softwareFunctionality != 'Hardware Drivers'"/>
+          </span>
+        </div>
+        <div class="col-md-6" id="app-info-box" ng-click="getDetails(item.applicationId)">
+          <h3 class="item-name" title="{{ item.applicationName }}">
+            {{ item.applicationName }}
+            <!--span ng-if="item.isRa" class="text-red retired-app-icon" data-tooltip="Restricted Application" data-placement="top">
+              R
+            </span-->
+          </h3>
+          <div ng-if="!data.flag" class="text-darker item-attribute" title="{{ item.softwareFunctionality }}">
+            {{ item.softwareFunctionality }}
+          </div>
+          <div ng-if="!data.flag" class="text-darker item-attribute" title="{{ item.vendorName }}" style="padding: 2px 0 2px 0;">
+            {{ item.vendorName }}
+          </div>
+          <div ng-if="!data.flag" class="text-darker item-attribute app-version" title="{{ item.version }}">
+            {{ item.version }}
+          </div>
+          <div ng-if="data.flag" class="text-darker item-attribute app-version" title="{{ item.version }}">
+            New Version: {{ item.version }}
+          </div>
+          <!--div ng-if="data.flag && item.currentVersion" class="text-darker item-attribute" title="{{ item.currentVersion }}">
+            Your Current Version: {{ item.currentVersion }}
+          </div-->
+          <div ng-if="data.flag && (item.currentAppPaduStatus || item.currentVersion)" class="text-darker item-attribute" title="{{ item.currentAppPaduStatus }}">
+            Your Current Version: {{ item.currentVersion }} <!--{{ item.currentAppPaduStatus }}-->
+            <!--div class="row sticky-bottom" style="right:2px;position:absolute;">
+              <div class="col-md-2">
+                <img ng-show="item.currentAppPaduStatus == 'Preferred'" class="padu-image" src="PADU_Preferred.png" />
+                <img ng-show="item.currentAppPaduStatus == 'Acceptable'" class="padu-image" src="PADU_Acceptable.png" />
+                <img ng-show="item.currentAppPaduStatus == 'Discouraged'" class="padu-image" src="PADU_Discouraged.png" />
+                <img ng-show="item.currentAppPaduStatus == 'Unacceptable'" class="padu-image" src="PADU_Unacceptable.png" />
+              </div>
+      			</div-->
+          </div>
+        </div>
+        <div class="col-md-2" style="padding-right:18px; padding-left:0px;">
+          <div class="os-icon-div">
+            <i ng-if="item.currentOperatingSystems.indexOf('Windows 7') != -1 ||
+                      item.currentOperatingSystems.indexOf( 'Windows 10 SAR') != -1 ||
+                      item.currentOperatingSystems.indexOf( 'Windows 10 2016 LTSB') != -1 ||
+                      item.currentOperatingSystems.indexOf( 'Windows 8.1') != -1" 
+               class="fa fa-windows os-icon" aria-hidden="true"></i>
+                        <i ng-if="item.currentOperatingSystems.indexOf('Mojave') != -1 ||
+                      item.currentOperatingSystems.indexOf( 'Catalina') != -1 ||
+                      item.currentOperatingSystems.indexOf( 'High Sierra') != -1"
+               class="fa fa-apple os-icon" aria-hidden="true"></i>
+            <!--
+            <i ng-if="item.currentOperatingSystems == 'Mojave' ||
+                      item.currentOperatingSystems == 'Catalina' ||
+                      item.currentOperatingSystems == 'High Sierra'"
+               class="fa fa-apple os-icon" aria-hidden="true"></i>
+            -->
+            <span ng-if="item.isRa" class="restricted-app-card text-bold text-red">
+              <span>R</span>
+            </span>
+          </div>
+        </div>
+      </div> <!--END CARD CONTENT ROW-->
+      <!--End Display cards -->
+      <!--Start PADU -->
+      <div ng-if="!data.flag" class="row sticky-bottom" style="bottom:2px;position:absolute;">
+        <div class="col-md-12">
+          <img ng-show="item.paduStatus == 'Preferred'" class="padu-image" src="1on.png" />
+          <img ng-show="item.paduStatus == 'Acceptable'" class="padu-image" src="2on.png" />
+          <img ng-show="item.paduStatus =='Discouraged'" class="padu-image" src="3on.png" />
+          <img ng-show="item.paduStatus == 'Unacceptable'" class="padu-image" src="4on.png" />
+        </div>
+      </div>
+      <!--End PADU -->
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a20e460000001</claim_timestamp>
+        <metadata_update_name>sp_widget_fafeb66b2fa2301097bc18aa2799b670</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:49:58</sys_created_on>
+        <sys_id>26903f542f43301097bc18aa2799b6f5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:58</sys_updated_on>
+    </sys_claim>
+</record_update>

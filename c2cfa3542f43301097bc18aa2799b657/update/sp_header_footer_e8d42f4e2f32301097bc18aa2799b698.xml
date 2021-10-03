@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_header_footer">
+    <sp_header_footer action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($rootScope, $scope, snRecordWatcher, spUtil, $location, $uibModal, cabrillo, $timeout, $window) {
+  /* widget controller */
+  var c = this;
+	$scope.userID = $scope.user.sys_id;
+	
+	$scope.avatarProfile = {
+		userID: $scope.user.sys_id,
+		name: $scope.user.name,
+		initials: $window.NOW.user_initials
+	};
+	
+	if ($window.NOW.user_avatar) {
+		$scope.avatarProfile.userImage = $window.NOW.user_avatar;
+	}
+
+	if (cabrillo.isNative())
+		$scope.isViewNative = true;
+
+	$scope.openPopUp = function() {
+		var url = "$chat_support.do?queueID=" + $scope.data.connect_support_queue_id;
+		var popup = window.open (url, "popup", "width=900, height=600");
+	};
+
+	$scope.openLogin = function () {
+		$scope.modalInstance = $uibModal.open({
+			templateUrl: 'modalLogin',
+			scope: $scope
+		});
+	};
+
+	var xsScreenSize = isXSScreenSize();
+	$scope.showXSAvatar = isXSScreenSize();
+	$scope.showAvatar = !isXSScreenSize();
+	
+	angular.element($window).on('resize', function () {
+		if(xsScreenSize !== isXSScreenSize() && (!$scope.showXSAvatar || !$scope.showAvatar)){
+			$scope.showXSAvatar = true;
+			$scope.showAvatar = true;
+		}	   
+	});
+	
+	
+	function isXSScreenSize() {
+		return $window.matchMedia('(max-width: 767px)').matches;
+	}
+	
+	$rootScope.$on('sp.avatar_changed', function() {
+		$scope.userID = "";
+		$timeout(function(){
+			$scope.userID = $scope.user.sys_id;
+		});
+	});
+
+	$scope.isHomepage = function() {
+		if (!$scope.page.id)
+			return true;
+
+		if ($scope.page.id == $scope.portal.homepage_dv)
+			return true;
+
+		return false;
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.navbar-header {&#13;
+    display: inline-block;&#13;
+  }&#13;
+&#13;
+.navbar-brand-title{&#13;
+  font-size: 16px;&#13;
+  font-weight: 600;&#13;
+  padding-top:25px;&#13;
+  padding-bottom:10px;&#13;
+  padding-left:0px;&#13;
+  color:#FFFFFF;&#13;
+  line-height: 24px;&#13;
+  display:inline;&#13;
+}&#13;
+&#13;
+.navbar-brand-logo{&#13;
+  padding-right:5px;&#13;
+  padding-bottom:15px;&#13;
+  padding-left: 12px;&#13;
+  padding-top: 13px;&#13;
+  display: inline-block;&#13;
+}&#13;
+&#13;
+.navbar-brand &gt; img {&#13;
+    display: inline-block;&#13;
+    width: auto;&#13;
+    height: 100%;&#13;
+}&#13;
+&#13;
+.navbar-right{&#13;
+  font-size: 16px;&#13;
+  color: rgb(153, 153, 153);&#13;
+  font-weight:500;&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu {&#13;
+	position: absolute;&#13;
+	list-style: none;&#13;
+	z-index: 9999;&#13;
+	padding: 1.25em 1.25em 0;&#13;
+	top: 4.188rem;&#13;
+	width: 18.125rem;&#13;
+	background-color: #fff;&#13;
+	box-shadow: 0 0 .625rem 0 rgba(0, 0, 0, .1);&#13;
+	height: auto;&#13;
+  color: rgb(0, 102, 245);&#13;
+	font-size: 15.93px;&#13;
+  font-weight: bold;&#13;
+  &#13;
+}&#13;
+&#13;
+@media (min-width:1024px) {&#13;
+	.navbar .dropdown-menu {&#13;
+		left: 50%;&#13;
+		transform: translate(-50%)&#13;
+	}&#13;
+}&#13;
+&#13;
+@media only screen and (max-width:1023px) {&#13;
+	.navbar .dropdown-menu {&#13;
+		height: 100vh;&#13;
+		padding: 0;&#13;
+		top: 0;&#13;
+		width: 100%;&#13;
+		background-color: #f5f5f5&#13;
+	}&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu li {&#13;
+	padding-bottom: 1em&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu li:hover a {&#13;
+	text-decoration: none&#13;
+}&#13;
+&#13;
+@media (min-width:1024px) {&#13;
+	.navbar .dropdown-menu li:hover a {&#13;
+		color: #0066f5&#13;
+	}&#13;
+}&#13;
+&#13;
+@media only screen and (max-width:1023px) {&#13;
+	.navbar .dropdown-menu li {&#13;
+		padding: 0;&#13;
+		position: relative;&#13;
+		font-size: .813em;&#13;
+		line-height: 4.615em;&#13;
+		text-overflow: ellipsis;&#13;
+		border-bottom: .063em solid #d0d0d0&#13;
+	}&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu a {&#13;
+	font-size: .875em;&#13;
+	font-weight: 500;&#13;
+	color: #003c71;&#13;
+	padding-left: 1.125em;&#13;
+	letter-spacing: -.028em;&#13;
+	transition: color .7s ease;&#13;
+	width: 100%;&#13;
+	display: block&#13;
+}&#13;
+&#13;
+@media only screen and (max-width:1023px) {&#13;
+	.navbar .dropdown-menu a {&#13;
+		font-weight: 600;&#13;
+		letter-spacing: -.0375em;&#13;
+		font-size: 1.077em;&#13;
+		display: block;&#13;
+		line-height: 4.615em&#13;
+	}&#13;
+}&#13;
+&#13;
+@media (min-width:1024px) {&#13;
+	.navbar .dropdown-menu:before {&#13;
+		content: " ";&#13;
+		border-left: .125em solid #e2e2e2;&#13;
+		height: 100%;&#13;
+		position: absolute;&#13;
+		top: 0&#13;
+	}&#13;
+&#13;
+  .navbar .dropdown-menu .indicator {&#13;
+		width: .125rem;&#13;
+		background: #0066f5;&#13;
+		height: 1.25rem;&#13;
+		position: absolute;&#13;
+		top: 0;&#13;
+		transition: all .3s&#13;
+	}&#13;
+}&#13;
+&#13;
+&#13;
+&#13;
+/***START NAVBAR STYLE***/&#13;
+.navbar .dropdown-menu {&#13;
+    position: absolute;&#13;
+    list-style: none;&#13;
+    z-index: 9999;&#13;
+    padding: 1.25em 3.5em 0 0 !important;&#13;
+    top: 4.188rem;&#13;
+    width: 18.125rem;&#13;
+    background-color: #fff;&#13;
+    box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, .1);&#13;
+    height: auto; &#13;
+    font-size: 15.93px;&#13;
+    font-weight: bold;&#13;
+    text-align: left;&#13;
+    margin-top: 1.1em;&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu a {&#13;
+    font-size: inherit !important;&#13;
+    font-weight: 500;&#13;
+    color: #003c71;&#13;
+    padding-left: .75em !important;&#13;
+    letter-spacing: inherit !important;&#13;
+    transition: color .7s ease;&#13;
+    width: 200%;&#13;
+    display: block;&#13;
+}&#13;
+&#13;
+/*****Start Responsive Sizing*****/&#13;
+//Everything not mobile&#13;
+@media (min-width: 768px) {&#13;
+&#13;
+}&#13;
+&#13;
+//ultra wide monitor&#13;
+@media screen and (max-width:2560px) {  &#13;
+&#13;
+}&#13;
+&#13;
+//medium wide monitor&#13;
+@media screen and (max-width:1920px) {&#13;
+ &#13;
+}&#13;
+&#13;
+//medium wide monitor&#13;
+@media screen and (max-width:1712px) {&#13;
+&#13;
+}&#13;
+&#13;
+//Small monitor 1&#13;
+@media screen and (max-width:1440px) {&#13;
+  .navbar-collapse {&#13;
+    padding-left: 0px;&#13;
+    padding-right: 0px;&#13;
+  }&#13;
+  /*&#13;
+  .navbar-header {&#13;
+    width: 40%;&#13;
+  }&#13;
+  .navbar-brand &gt; img {&#13;
+    position: relative;&#13;
+    width: 40%;&#13;
+  }&#13;
+  */&#13;
+}&#13;
+&#13;
+//Small monitor 2&#13;
+@media screen and (max-width:1357px) {&#13;
+  .navbar-collapse {&#13;
+    padding-left: 0px;&#13;
+    padding-right: 0px;&#13;
+  }&#13;
+  /*&#13;
+  .navbar-header {&#13;
+    width: 38%;&#13;
+  }&#13;
+  .navbar-brand &gt; img {&#13;
+    position: relative;&#13;
+    width: 40%;&#13;
+  }&#13;
+  */&#13;
+}&#13;
+&#13;
+//Small monitor 3&#13;
+@media screen and (max-width:1268px) {&#13;
+/*&#13;
+  .navbar-brand &gt; img {&#13;
+    position: relative;&#13;
+    width: 50%;&#13;
+  }&#13;
+  */&#13;
+}&#13;
+&#13;
+//mobile large &amp; tablet&#13;
+@media only screen and (max-width: 1100px) {&#13;
+.navbar .dropdown-menu {&#13;
+    height: auto !important;&#13;
+    padding: 0;&#13;
+    top: auto !important;&#13;
+    width: 100%;&#13;
+    background-color: #ffffff !important;&#13;
+}&#13;
+/*&#13;
+  .navbar-brand &gt; img {&#13;
+    position: relative;&#13;
+    width: 87%;&#13;
+  }&#13;
+  .navbar-header {&#13;
+    width: 21.5%;&#13;
+  }&#13;
+  */&#13;
+}&#13;
+&#13;
+//mobile large &amp; tablet&#13;
+@media (min-width: 1024px) {&#13;
+&#13;
+.navbar .dropdown-menu:before {&#13;
+    content: " ";&#13;
+    border-left: none !important;   /*Was .125em solid #e2e2e2;*/&#13;
+    height: 100%;&#13;
+    position: absolute;&#13;
+    top: 0;&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu {&#13;
+    left: 0% !important;&#13;
+    transform: translate(0%) !important; &#13;
+    width: 100% !important;&#13;
+}&#13;
+}&#13;
+&#13;
+//mobile medium&#13;
+@media screen and (max-width:750px) {&#13;
+  .mobile-hide {&#13;
+    display: none;&#13;
+  }&#13;
+}&#13;
+&#13;
+//mobile medium&#13;
+@media screen and (max-width:713px) {&#13;
+  .mobile-hide {&#13;
+    display: none;&#13;
+  }&#13;
+  .navbar .dropdown-menu {&#13;
+    //top: 4.188rem;&#13;
+    width: 18.125rem;&#13;
+    height: auto; &#13;
+    font-size: 15.93px;&#13;
+    font-weight: bold;&#13;
+    text-align: left;&#13;
+    margin-top: 0;&#13;
+}&#13;
+&#13;
+.navbar .dropdown-menu a {&#13;
+    font-size: 1.1em !important;&#13;
+    font-weight: 600 !important;&#13;
+    padding-left: .75em !important;&#13;
+    color: #003c71 !important;&#13;
+    letter-spacing: normal;&#13;
+    transition: color .7s ease;&#13;
+    display: block;&#13;
+}&#13;
+}&#13;
+&#13;
+/*&#13;
+@media (max-width: 767px) {&#13;
+  .navbar-toggle {&#13;
+    display: none;&#13;
+}&#13;
+.navbar-collapse.collapse {&#13;
+    display: block !important;&#13;
+    height: auto !important;&#13;
+    padding-bottom: 0;&#13;
+    overflow: visible !important;&#13;
+    display: block;&#13;
+    float: right;&#13;
+}&#13;
+  .navbar-right ul {&#13;
+&#13;
+    margin-block-end: 0px;&#13;
+    margin-block-start: 0px;&#13;
+margin-bottom: 0px;&#13;
+margin-inline-end: 0px;&#13;
+margin-inline-start: 0px;&#13;
+margin-left: 0px;&#13;
+margin-right: 0px;&#13;
+margin-top: 0px;&#13;
+margin-inline-start: 0px;&#13;
+float: left;&#13;
+  }&#13;
+  .collapse {&#13;
+  display: none;&#13;
+  }&#13;
+}&#13;
+*/&#13;
+&#13;
+//mobile All&#13;
+@media screen and (max-width:767px) {&#13;
+  .mobile-hide {&#13;
+    display: none;&#13;
+  }&#13;
+  /*&#13;
+  .navbar-header {&#13;
+    width: 100%;&#13;
+  }&#13;
+  .navbar-brand &gt; img {&#13;
+    position: relative;&#13;
+    width: 36%;&#13;
+  }&#13;
+  */&#13;
+ .navbar-toggle {&#13;
+   margin-top: 10px;&#13;
+   background-color: #3a3f51;&#13;
+    display: block;&#13;
+  }&#13;
+  .navbar-inverse .navbar-toggle .icon-bar {&#13;
+    background-color: #f5f5f5;&#13;
+  }&#13;
+  .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {&#13;
+    background-color: #F5F5F5;&#13;
+      .icon-bar {&#13;
+        background-color: #3a3f51;&#13;
+      }&#13;
+  }&#13;
+  .navbar .dropdown-menu {&#13;
+    position: absolute;&#13;
+    list-style: none;&#13;
+    z-index: 9999;&#13;
+    padding: 1.25em 3.5em 0 0 !important;&#13;
+    width: 18.125rem;&#13;
+    background-color: #fff;&#13;
+    box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, .1);&#13;
+    height: auto; &#13;
+    font-size: 15.93px;&#13;
+    font-weight: bold;&#13;
+    text-align: left;&#13;
+    margin-top: 0;&#13;
+  }&#13;
+&#13;
+  .navbar .dropdown-menu a {&#13;
+    font-size: 1.1em !important;&#13;
+    font-weight: 600 !important;&#13;
+    padding-left: .75em !important;&#13;
+    color: #003c71 !important;&#13;
+    letter-spacing: normal;&#13;
+    transition: color .7s ease;&#13;
+    display: block;&#13;
+  }&#13;
+}&#13;
+&#13;
+@media screen and (max-width:700px) {&#13;
+ .navbar-toggle {&#13;
+   margin-top: -20px;&#13;
+  }&#13;
+}&#13;
+/*****End Responsive Sizing*****/</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+ $(document).keyup(function(event) {
+		if (event.which == 9) { //tab key handler + arrow keys
+			if ($(event.target).parents(".dropdown-menu").length == 0) { //if we are NOT inside a dropdown...
+				//close the dropdowns
+				$(".dropdown").removeClass("open");
+				$("[data-toggle='dropdown']").attr("aria-expanded", "false");
+			}
+		}
+	});
+	
+	$(element).on('click.nav','.navbar-collapse.in',function(e) {
+		var target = $(e.target);
+		if (target.is('a')) {
+			if (target.hasClass('sp-menu-has-items'))
+				return; // menu item has a submenu, so just toggle it
+			
+			// collapse mobile nav if clicked an anchor
+			$(this).removeClass('in').addClass('collapse');
+			return;
+		}
+
+		if (target.parent().hasClass("toggle-dropdown")) {
+			// collapse mobile nav if parent has toggle-dropdown class
+			$(this).removeClass('in').addClass('collapse');
+			return;
+		}
+
+		// if neither target nor parent is an anchor, do nothing
+		if (!target.parent().is('a'))
+			return;
+
+		// collapse mobile nav if target is part of a submenu
+		if (target.parents("ul.dropdown-menu").length > 0)
+			$(this).removeClass('in').addClass('collapse');
+	}); 
+}]]></link>
+        <name>Aneesh Portal Header</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[// Defines the support queue ID that will be linked to by the Live Chat link in header
+data.connect_support_queue_id = $sp.getValue('sp_chat_queue');
+data.login_page = $sp.getValue('login_page');
+data.profileBtnMsg = gs.getMessage("Press space to access user profile or logout");
+var menu = $sp.getValue("sp_rectangle_menu");
+data.menu = $sp.getWidgetFromInstance(menu);
+if (data.menu && data.menu.data) {
+	data.menu.data.replace = true;
+	// Hide login if menu already has link to login
+	data.hasLogin = false;
+	if (data.menu.data.menu.items) {
+		for(var i in data.menu.data.menu.items) {
+			var item = data.menu.data.menu.items[i];
+			if (item.type == 'page' && item.sp_page == data.login_page)
+				data.hasLogin = true;
+		}
+	}
+}
+
+data.loginWidget = $sp.getWidgetFromInstance('login-modal');]]></script>
+        <servicenow>false</servicenow>
+        <static>false</static>
+        <sys_class_name>sp_header_footer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-26 14:19:37</sys_created_on>
+        <sys_id>e8d42f4e2f32301097bc18aa2799b698</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Aneesh Portal Header</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_header_footer_e8d42f4e2f32301097bc18aa2799b698</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:19</sys_updated_on>
+        <template><![CDATA[<div >
+  <nav class="navbar-inverse" ng-class="::{'navbar':!isViewNative, 'is-native': isViewNative}"
+       role="navigation">
+    <div ng-show="::!isViewNative"  class="navbar-header">
+      <!--
+      <a class="navbar-brand" ng-if="::!portal.logo" href="?id={{::portal.homepage_dv}}"><span>{{::portal.title}}</span></a>
+      <a class="navbar-brand navbar-brand-logo" ng-if="::portal.logo" href="?id={{::portal.homepage_dv}}">
+        <img ng-src="{{::portal.logo}}" />
+      </a>
+	-->
+      
+            <div class="navbar-brand navbar-brand-logo">
+              <img src="sn-logo-light-green-email.png" width="33%" height="auto"/>
+      <!--a class="navbar-brand navbar-brand-logo"  href="https://www.unitedhealthgroup.com" >
+        <img ng-src="euts_portal_uhg_logo.png" />
+      </a>
+      <a class="navbar-brand navbar-brand-title" href="https://www.unitedhealthgroup.com"><span style="margin-left:5px;font-color:white!important">UnitedHealth Group</span></a-->  
+      </div>
+
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sp-nav-bar">
+        <span class="sr-only">${Toggle navigation}</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div sp-navbar-toggle="" class="collapse navbar-collapse navbar-right" id="sp-nav-bar">
+      <!-- Include The Menu -->
+      <sp-widget widget="data.menu"></sp-widget>
+      <ul ng-if="::(!user.logged_in && page.id != portal.login_page_dv && !data.hasLogin)" class="nav navbar-nav">
+        <li><a href ng-click="openLogin()">${Login}</a></li>
+      </ul>
+      <ul ng-if="::user.logged_in" class="nav navbar-nav">
+        <!-- chat, avatar, and logout -->
+        <li ng-if="::data.connect_support_queue_id"><a href ng-click="openPopUp()">${Live Chat}</a></li>
+        <li class="dropdown hidden-xs">
+          <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="navbar-avatar"><sn-avatar class="avatar-small" primary="userID" /></span>
+            <span class="visible-lg-inline">{{::user.name}}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <!--
+            <li><a ng-href="?id=user_profile&sys_id={{::user.sys_id}}">${Profile}</a></li>
+			-->
+            <li><a href="?id=user_settings">${Settings}</a></li>
+            <li><a href="{{::portal.logoutUrl}}">${Logout}</a></li>
+          </ul>
+        </li>
+        <li class="visible-xs-block"><a ng-href="?id=user_profile&sys_id={{::user.sys_id}}"><span class="navbar-avatar"><sn-avatar class="avatar-small-medium" primary="userID" /></span>{{::user.name}}</a></li>
+        <li class="visible-xs-block"><a href="{{::portal.logoutUrl}}">${Logout}</a></li>
+      </ul>
+    </div>
+  </nav>  
+</div>]]></template>
+    </sp_header_footer>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a175ef0000001</claim_timestamp>
+        <metadata_update_name>sp_header_footer_e8d42f4e2f32301097bc18aa2799b698</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:49:19</sys_created_on>
+        <sys_id>c970bb542f43301097bc18aa2799b6f8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:19</sys_updated_on>
+    </sys_claim>
+</record_update>

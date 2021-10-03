@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/***Start Workspace One Link Style***/&#13;
+.ws1-wrapper {&#13;
+  //background-color: rgba(204, 222, 235, .2);&#13;
+  //background-image: &#13;
+  //  linear-gradient(rgba(73, 137, 182, 0.035) 0%, rgba(101, 160, 201, 0.045) 50%, rgba(101, 160, 201, 0.02) 100%); //Darker to lighter blue gradient&#13;
+  border-radius: 4px;&#13;
+  padding: 5px 0;&#13;
+  //border: .85px solid rgba(204, 222, 235, .2);&#13;
+&#13;
+}&#13;
+&#13;
+.mobile-icon {&#13;
+  width: 75px;&#13;
+  height: auto;&#13;
+}&#13;
+&#13;
+&#13;
+.hardware-icon {&#13;
+  width: 72px;&#13;
+  height: auto;&#13;
+}&#13;
+&#13;
+.raise-text {&#13;
+  margin-top: -10px;&#13;
+}&#13;
+&#13;
+.ws1-link {&#13;
+  box-shadow: 0 4px 14px rgba(56, 96, 92, .02);&#13;
+}&#13;
+&#13;
+.ws1-link:hover {&#13;
+  background-image: &#13;
+    linear-gradient(rgba(73, 137, 182, 0.030) 0%, rgba(101, 160, 201, 0.040) 50%, rgba(101, 160, 201, 0.022) 100%); //Darker to lighter blue gradient&#13;
+}  &#13;
+&#13;
+.ws1-logo {&#13;
+  position: relative;&#13;
+  width: 96%;&#13;
+}&#13;
+&#13;
+.ws1-textbox {&#13;
+  padding-top: .5em;&#13;
+}&#13;
+&#13;
+.ws1-text {&#13;
+  font-size: 1.2em;&#13;
+}&#13;
+/***End Workspace One Link Style***/&#13;
+&#13;
+&#13;
+.help-wrapper {&#13;
+  margin-bottom: 20px;&#13;
+  height: 270px;&#13;
+  padding-left: 10px; &#13;
+  padding-right: 10px; &#13;
+}&#13;
+&#13;
+.help-header {&#13;
+  border-bottom: 1.9px solid #cfcfd1;&#13;
+  background-color: background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);&#13;
+  padding-top: 0px;&#13;
+  padding-bottom: 0px;&#13;
+  //border-radius: 3px;&#13;
+  margin-bottom: 3px;&#13;
+}&#13;
+&#13;
+#help-title {&#13;
+  //margin-top: 8px;&#13;
+  margin-bottom: 6px;&#13;
+  letter-spacing: -0.6px;&#13;
+}&#13;
+&#13;
+.links-wrapper {&#13;
+  //margin-bottom: 8px;&#13;
+}&#13;
+&#13;
+#link-container {&#13;
+  transition: all .1s ease-in-out; //not working&#13;
+  //border: .5px solid rgba(56, 96, 92, .02);&#13;
+  //border-color: rgba(227, 205, 127, 0.1);&#13;
+  border-radius: 4px;&#13;
+  box-shadow: 0 4px 15px rgba(56, 96, 92, .02);&#13;
+  height: 88px;&#13;
+  letter-spacing: -0.8px;&#13;
+  font-family: inherit;&#13;
+  //margin-top: 2px;&#13;
+  //width: 100%;&#13;
+}&#13;
+&#13;
+#link-container:hover {&#13;
+  transition: all .1s ease-in-out; //not working&#13;
+  background-image: &#13;
+    //linear-gradient(rgba(188, 150, 113, 0.08), rgba(73, 137, 182, 0.0)); //Dark White--blue-orange gradient&#13;
+    linear-gradient(rgba(73, 137, 182, 0.035) 0%, rgba(101, 160, 201, 0.045) 50%, rgba(101, 160, 201, 0.027) 100%); //Darker to lighter blue gradient&#13;
+}&#13;
+&#13;
+.square-link {&#13;
+  height: 100%;&#13;
+}&#13;
+&#13;
+.square-content {&#13;
+&#13;
+}&#13;
+&#13;
+.text-col {&#13;
+  width: 70%;&#13;
+}&#13;
+&#13;
+.icon-col {&#13;
+  //overflow: hidden; &#13;
+  width: 30%;&#13;
+}&#13;
+&#13;
+#icon1 {&#13;
+  background-color: #d96459;&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#icon2 {&#13;
+  //background-color: #4285F4;&#13;
+  background-color: #1D5F99;&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 10px 10px 10px 10px;&#13;
+}&#13;
+&#13;
+#icon3{&#13;
+  background-color: #facf5a;&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#icon4 {&#13;
+  background-color: #43A5A0;  //lighter #5dc0a6 darker #3aafa9 &#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#icon5 {&#13;
+  background-color: #318C57; //darker #388659 lighter #3b945e&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#icon6 {&#13;
+  background-color: #F9A11D; //was #ffa323;&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#icon7 {&#13;
+  background-color: #867396; //was #ffa323;&#13;
+  margin-top: 10px;&#13;
+  border-radius: 3px;&#13;
+  padding: 11.5px 11.5px 11.5px 11.5px;&#13;
+}&#13;
+&#13;
+#image-overlay:hover {&#13;
+  position: absolute;&#13;
+  top: 0;&#13;
+  bottom: 0;&#13;
+  left: 0;&#13;
+  right: 0;&#13;
+  height: 100%;&#13;
+  width: 100%;&#13;
+  opacity: 0.1;&#13;
+  transition: .1s ease-in-out;&#13;
+  background-color: gray;&#13;
+}&#13;
+&#13;
+#square-size {&#13;
+  height: 100%;&#13;
+  vertical-align: middle;&#13;
+}&#13;
+&#13;
+#link-1-text {&#13;
+  color: #717171;&#13;
+&#13;
+  font-size: 17px;&#13;
+}&#13;
+&#13;
+#link-2-text {&#13;
+  color: #717171;&#13;
+&#13;
+  font-size: 17px;&#13;
+}&#13;
+&#13;
+#link-3-text {&#13;
+  color: #717171;&#13;
+  font-size: 17px;&#13;
+}&#13;
+&#13;
+#link-4-text {&#13;
+  color: #717171;&#13;
+  font-size: 16.5px;&#13;
+}&#13;
+&#13;
+#link-5-text {&#13;
+  color: #717171;&#13;
+  font-size: 17px;&#13;
+}&#13;
+&#13;
+#link-6-text {&#13;
+  color: #717171;&#13;
+  font-size: 17px;&#13;
+}&#13;
+&#13;
+&#13;
+#link-1 {&#13;
+  position: relative;&#13;
+  opacity: 1;&#13;
+  margin-left: 0px;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 2vh;&#13;
+}&#13;
+&#13;
+#link-2 {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  width: 100%;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 3.5vh;&#13;
+}&#13;
+&#13;
+#link-3 {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  width: 100%;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 2vh;&#13;
+}&#13;
+&#13;
+#link-4 {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  width: 100%;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 1vh;&#13;
+}&#13;
+&#13;
+#link-5 {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  width: 100%;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 2vh;&#13;
+}&#13;
+&#13;
+#link-6 {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  width: 100%;&#13;
+  border-radius: 3px;&#13;
+  padding-top: 2vh;&#13;
+}&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>_ore_apps</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>More Apps</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:28:36</sys_created_on>
+        <sys_id>545be7502f43301097bc18aa2799b69c</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>More Apps</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_545be7502f43301097bc18aa2799b69c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:18</sys_updated_on>
+        <template><![CDATA[<div class="help-wrapper">
+
+  <div class="row" id="help-row">
+    <div class="col-md-12" id="help-colum">
+      <center class="help-header">
+        <h4 id="help-title" >
+          Help Section
+        </h4>
+      </center>
+    </div>
+  </div>
+ 
+  <div class="links-wrapper"> <!--was class="wrapper" -->
+    <!--div class="gallery"-->
+    <!--ul id="grid"-->           
+
+    <!--*****Grow Squares************-->        
+    <div class="row"> <!--*****Start of 1st of Row*****-->
+
+      <div id="link-container" class="col-md-6">
+        <a href="/my_portal?id=apps_page" target="_blank">
+          <div class="row">
+            <div class="col-md-4 icon-col">
+              <img id="icon1" src="cogs.png" height="65" width="65">
+            </div>
+            <div id="square-size" class="col-md-8 text-col">      
+              <div class="square-link" id="link-1">
+                <div class="square-content">
+                  <div id="link-1-text" class="text-darker"> 
+                    Apps 
+                  </div>
+                </div>
+              </div>
+            </div>    
+          </div>
+        </a>
+      </div> <!--End of link-container-->
+</div>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a1731d0000001</claim_timestamp>
+        <metadata_update_name>sp_widget_545be7502f43301097bc18aa2799b69c</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:49:18</sys_created_on>
+        <sys_id>f470fb142f43301097bc18aa2799b6e0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:18</sys_updated_on>
+    </sys_claim>
+</record_update>

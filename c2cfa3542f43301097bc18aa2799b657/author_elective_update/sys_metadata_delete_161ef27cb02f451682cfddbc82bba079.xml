@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_row">
+    <sp_row action="DELETE">
+        <class_name/>
+        <order>2</order>
+        <sp_column/>
+        <sp_container display_value="My Home - Container 2">6c1f882a2f12301097bc18aa2799b644</sp_container>
+        <sys_class_name>sp_row</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-02 15:25:16</sys_created_on>
+        <sys_id>696f006a2f12301097bc18aa2799b6aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>2</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Global">global</sys_scope>
+        <sys_update_name>sp_row_696f006a2f12301097bc18aa2799b6aa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-09-02 15:25:16</sys_updated_on>
+    </sp_row>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Global">global</application>
+        <file_path/>
+        <instance_id>7de9e160db477700b847ac44d4961902</instance_id>
+        <instance_name>dev90027</instance_name>
+        <name>sp_row_696f006a2f12301097bc18aa2799b6aa</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_row"><sp_row action="INSERT_OR_UPDATE"><class_name/><order>2</order><sp_column/><sp_container display_value="My Home - Container 2">6c1f882a2f12301097bc18aa2799b644</sp_container><sys_class_name>sp_row</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2021-09-02 15:25:16</sys_created_on><sys_id>696f006a2f12301097bc18aa2799b6aa</sys_id><sys_mod_count>0</sys_mod_count><sys_name>2</sys_name><sys_package display_value="Global" source="global">global</sys_package><sys_policy/><sys_scope display_value="Global">global</sys_scope><sys_update_name>sp_row_696f006a2f12301097bc18aa2799b6aa</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2021-09-02 15:25:16</sys_updated_on></sp_row></record_update>]]></payload>
+        <payload_hash>102360566</payload_hash>
+        <record_name>2</record_name>
+        <reverted_from/>
+        <source>14e90c262f12301097bc18aa2799b654</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-02 15:25:17</sys_created_on>
+        <sys_id>656f006a2f12301097bc18aa2799b6ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>17ba71d3f650000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-09-02 15:25:17</sys_updated_on>
+        <type>Row</type>
+        <update_guid>ad6f006a4f123010b3093a915b1d33ab</update_guid>
+        <update_guid_history>ad6f006a4f123010b3093a915b1d33ab:102360566</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="2">bd911a6f2f22301097bc18aa2799b677</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 13:43:43</sys_created_on>
+        <sys_db_object display_value="" name="sp_row">sp_row</sys_db_object>
+        <sys_id>161ef27cb02f451682cfddbc82bba079</sys_id>
+        <sys_metadata>696f006a2f12301097bc18aa2799b6aa</sys_metadata>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>2</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_scope_delete display_value="">3a08cd4d4e9544da90041791f25d2984</sys_scope_delete>
+        <sys_update_name>sys_metadata_delete_161ef27cb02f451682cfddbc82bba079</sys_update_name>
+        <sys_update_version display_value="sp_row_696f006a2f12301097bc18aa2799b6aa">656f006a2f12301097bc18aa2799b6ac</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:48:54</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

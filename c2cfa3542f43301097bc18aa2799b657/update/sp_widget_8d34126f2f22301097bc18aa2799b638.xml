@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($rootScope, $scope, spUtil, $location, $window, $uibModal) {
+  /* widget controller */
+  var c = this;
+	c.options.glyph = c.options.glyph || 'search';
+	c.options.title = c.options.title || c.data.searchMsg;
+	c.options.color = c.options.color || "default";
+	c.searchTerm = c.data.q;
+
+	c.onSelect = function($item, $model, $label) {
+		c.searchTerm = ""; // prevents unexpected result if user quickly clicks search button after selecting
+		if ($item.target)
+			window.open($item.url, $item.target);
+		else {
+			var newUrl = $location.url($item.url);
+			spAriaFocusManager.navigateToLink(newUrl.url());
+		}  
+	};
+
+
+	c.getResults = function(query) {
+		var payload = {
+			"query": query,
+			"portal": c.data.portalID,
+			"source": c.data.searchSources,
+			"include_facets": false,
+			"isTypeahead": true
+		};
+		if (c.options.limit || c.options.limit == 0)
+			payload.count = c.options.limit;
+		return $http.post("/api/now/sp/search", payload).then(function(response) {
+			var result = response.data.result;
+			spAriaUtil.sendLiveMessage(result.results.length + " " +
+																 c.data.resultMsg + " " +
+																 c.data.navigationMsg +
+																 getNavigationKeys());
+			return result.results.map(function(item) {
+				//var config = c.data.searchSourceConfiguration[item.__search_source_id__];
+				//item.templateID = config.template;
+				item.url = '/euts_intake?id=euts_appstore_app_details&appKeyId=' + item.fields[1].value;
+				return item;
+			});
+		});
+	};
+
+	c.searchType = c.data.searchType;
+	$scope.$on('$locationChangeSuccess', onLocationChangeSuccess);
+
+	function onLocationChangeSuccess(event, newUrl, oldUrl) {
+		if(searchSourceChanged(newUrl, oldUrl)) {
+			var newUrlParams = newUrl.match(/t=.+/);
+			if(!newUrlParams) {
+				c.searchType = null;
+			} else {
+				c.searchType = newUrlParams[0].split("&")[0].substring(2);
+			}
+		}
+	}
+
+	function searchSourceChanged(newUrl, oldUrl) {
+		var newUrlParams = newUrl.match(/t=.+/),
+				oldUrlParams = oldUrl.match(/t=.+/);
+
+		if(!newUrlParams && !oldUrlParams) {
+			return false;
+		}
+
+		if((!newUrlParams && oldUrlParams) || (newUrlParams && !oldUrlParams)) {
+			return true;
+		}
+
+		return newUrlParams[0].split("&")[0] !== oldUrlParams[0].split("&")[0];
+	}
+
+	c.submitSearch = function() {
+		var shouldReloadPage = c.data.refreshPageOnSearch && $location.search().id === 'euts_search';
+
+
+		var newUrl;
+		if (c.searchTerm) {
+			newUrl = $location.search({
+				id: 'appstore',
+				q: c.searchTerm
+			});
+		}else{
+			newUrl = $location.search({
+				id: 'appstore'
+			});
+		}
+
+		/*	if (c.searchTerm) {
+			var newUrl = $location.search({
+				id: 'appstore',
+				q: c.searchTerm
+			});*/
+
+		if (shouldReloadPage)
+			$scope.$emit("sp.page.reload");
+
+		spAriaFocusManager.navigateToLink(newUrl.url());
+		//}
+	};
+	function getNavigationKeys() {
+		if($window.navigator.userAgent.indexOf("Mac OS X") > -1)
+			return '⌘';
+		return 'Control';
+	}
+
+	c.clearSearch = function() {
+		console.log('jtest');
+	};
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>#search-style {&#13;
+height: 42px;&#13;
+    padding: 8px 14px;&#13;
+    font-size: 18px;&#13;
+    border-radius: 4px;&#13;
+    border-bottom-right-radius: 0px;&#13;
+    border-top-right-radius: 0px;&#13;
+}&#13;
+&#13;
+.input-group-btn:last-child &gt; .btn, .input-group-btn:last-child &gt; .btn-group {&#13;
+    z-index: 2;&#13;
+    margin-left: -1px;&#13;
+    height: 42px;&#13;
+    padding: 8px 14px;&#13;
+    font-size: 18px;&#13;
+    //border-radius: 4px;&#13;
+}&#13;
+  &#13;
+.search-box,.close-icon,.search-wrapper {&#13;
+	position: relative;&#13;
+	padding: 10px;&#13;
+}&#13;
+.search-wrapper {&#13;
+	width: 500px;&#13;
+	margin: auto;&#13;
+	margin-top: 50px;&#13;
+}&#13;
+.search-box {&#13;
+	width: 80%;&#13;
+	border: 1px solid #ccc;&#13;
+  outline: 0;&#13;
+  border-radius: 15px;&#13;
+}&#13;
+.close-icon {&#13;
+	border:1px solid transparent;&#13;
+	background-color: transparent;&#13;
+	display: inline-block;&#13;
+	vertical-align: middle;&#13;
+  outline: 0;&#13;
+  cursor: pointer;&#13;
+}&#13;
+.close-icon:after {&#13;
+	content: "X";&#13;
+	display: block;&#13;
+	width: 15px;&#13;
+	height: 15px;&#13;
+	position: absolute;&#13;
+	background-color: #FA9595;&#13;
+	z-index:1;&#13;
+	right: 35px;&#13;
+	top: 0;&#13;
+	bottom: 0;&#13;
+	margin: auto;&#13;
+	padding: 2px;&#13;
+	border-radius: 50%;&#13;
+	text-align: center;&#13;
+	color: white;&#13;
+	font-weight: normal;&#13;
+	font-size: 12px;&#13;
+	box-shadow: 0 0 2px #E50F0F;&#13;
+	cursor: pointer;&#13;
+}&#13;
+.search-box:not(:valid) ~ .close-icon {&#13;
+	display: none;&#13;
+}&#13;
+.input-group .custom-form-control {&#13;
+    position: relative;&#13;
+    z-index: 3;&#13;
+    float: left;&#13;
+    width: 100%;&#13;
+    margin-bottom: 0;&#13;
+}&#13;
+&#13;
+.custom-form-control {&#13;
+    display: block;&#13;
+    width: 100%;&#13;
+    height: 34px;&#13;
+    padding: 6px 12px;&#13;
+    font-size: 14px;&#13;
+    line-height: 1.42857;&#13;
+    color: #555555;&#13;
+    background-color: #fff;&#13;
+    background-image: none;&#13;
+    border: 1px solid #ccc;&#13;
+    border-radius: 4px;&#13;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);&#13;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);&#13;
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+}&#13;
+&#13;
+.custom-form-control:focus {&#13;
+  /**Original Blue&#13;
+    border-color: #66afe9;&#13;
+    outline: 4px solid #66afe9;&#13;
+    outline: 5px auto #66afe9;&#13;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);&#13;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);&#13;
+  End Original Blue**/&#13;
+  &#13;
+  //Start new blue&#13;
+  border-color: rgba(53, 126, 189, .4) !important;&#13;
+    outline: 4px solid rgba(53, 126, 189, .4) !important;&#13;
+    outline: 5px auto rgba(53, 126, 189, .4) !important;&#13;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(53, 126, 189, .4) !important;&#13;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px rgba(53, 126, 189, .4) !important;&#13;
+}&#13;
+&#13;
+#logo {&#13;
+ width: 90%; &#13;
+ height: 90%;&#13;
+ //margin-top: 20%;&#13;
+}&#13;
+&#13;
+#logo-text {&#13;
+  margin-top: 39%;&#13;
+  font-size: 25px;&#13;
+  font-weight: 600;&#13;
+    margin-left: -9px;&#13;
+}&#13;
+&#13;
+.hero-text .input-group {&#13;
+width: 60%;&#13;
+}&#13;
+/*---------------*/&#13;
+/* The hero image */&#13;
+.hero-image {&#13;
+  height: 50%;&#13;
+  background-position: center;&#13;
+  background-repeat: no-repeat;&#13;
+  background-size: cover;&#13;
+  position: relative;&#13;
+}&#13;
+&#13;
+.typeahead{z-index:1051!important;}&#13;
+&#13;
+.sp-tagline-color {&#13;
+	color: $sp-tagline-color;&#13;
+}&#13;
+&#13;
+#search-bar {&#13;
+  width: 100%;&#13;
+  //padding-left: 16px;&#13;
+  padding-top: 10px;&#13;
+  margin-left: -25px;&#13;
+  margin-right: 50px;&#13;
+}&#13;
+&#13;
+&#13;
+.appstore-search-banner {&#13;
+   //background-image: &#13;
+    //linear-gradient(rgba(48, 99, 120, 0.58), rgba(96, 68, 11, 0.58)), //Gray--blue-orange gradient&#13;
+    //linear-gradient(rgba(218, 184, 149, 0.2), rgba(149, 189, 218, 0.2)), //White--blue-orange gradient&#13;
+    //linear-gradient(rgba(188, 150, 113, 0.3), rgba(73, 137, 182, 0.3)), //Dark White--blue-orange gradient&#13;
+     //linear-gradient(rgba(188, 150, 113, .53), rgba(73, 137, 182, .53)), //Dark White--blue-orange gradient&#13;
+  //background-image: linear-gradient(60deg, rgba(41, 50, 60, 0.82) 0%, rgba(72, 85, 99, 0.82) 100%);&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  height: 100%;&#13;
+  //margin-left: -20px;&#13;
+  //margin-right:-20px;&#13;
+margin-bottom: 5px;&#13;
+    margin-top: 10px;&#13;
+    //box-shadow: 0 0px 15px rgba(56, 96, 92, .4),&#13;
+  //							0 0 8px rgba(106, 138, 135, .9) inset;&#13;
+}&#13;
+&#13;
+&#13;
+#appstore-search {&#13;
+  //margin-top: 5px;&#13;
+  margin-bottom: 5px;&#13;
+  width: 90%;&#13;
+}&#13;
+&#13;
+.wrapper-xl {&#13;
+  padding-left: 35px !important;&#13;
+  padding-right: 35px !important;&#13;
+  padding-bottom: 35px !important;&#13;
+  padding-top: 23px !important;&#13;
+}&#13;
+&#13;
+#sorting-container {&#13;
+  float: right;&#13;
+  margin-right: 20px;&#13;
+  width: 100%;&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+#filter-parent-row {&#13;
+  margin-bottom: 3px;&#13;
+}&#13;
+&#13;
+#filter-child-row{&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+#filter-heading{&#13;
+  //padding: 8px 5px;&#13;
+  //color: #3a3f51;&#13;
+  background-color: #f5f5f5;&#13;
+  margin-top: 5px;&#13;
+  margin-top: 5px;&#13;
+  font-size: 20px;&#13;
+}&#13;
+&#13;
+#filter-title {&#13;
+  color: #717171;&#13;
+}&#13;
+&#13;
+#sort-filters {&#13;
+  margin-top: 8px;&#13;
+}&#13;
+&#13;
+.sort-drop-button {&#13;
+  width: 100%;&#13;
+  height: 100%;&#13;
+  color: #fff;&#13;
+  //background-color: #83aed4; //Bootstrap color: #428bca;&#13;
+  background-color: #6fad88;&#13;
+  border-color: #357ebd;&#13;
+  display: inline-block;&#13;
+  //margin-bottom: 13px;&#13;
+  font-weight: normal;&#13;
+  text-align: left;&#13;
+  vertical-align: middle;&#13;
+  touch-action: manipulation;&#13;
+  cursor: pointer;&#13;
+  //border: 1px solid transparent;&#13;
+  border: none;&#13;
+  white-space: nowrap;&#13;
+  padding: 6px 12px;&#13;
+  font-size: 14px;&#13;
+  line-height: 1.42857;&#13;
+  border-radius: 4px;&#13;
+  -webkit-user-select: none;&#13;
+  -moz-user-select: none;&#13;
+  -ms-user-select: none;&#13;
+  user-select: none;&#13;
+  box-shadow: 0 8px 15px rgba(56, 96, 92, .05);&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>appstore-typeahead-search</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Typeahead Search - AppStore</name>
+        <option_schema>[{"name":"title","section":"Presentation","label":"Title","type":"string"},{"name":"color","section":"Presentation","label":"Color","type":"string"},{"name":"glyph","section":"Presentation","label":"glyph","type":"string"},{"name":"size","section":"Presentation","label":"Size","type":"string"},{"hint":"Number of typeahead search results returned (default 15)","name":"limit","section":"Behavior","label":"Limit","type":"integer"},{"displayValue":"Search Source","hint":"If provided, limit the scope of the typeahead search to the given search sources","name":"contextual_search_sources","display_value_list":[],"section":"Behavior","label":"Contextual Search Sources","type":"glide_list","value":"sp_search_source","ed":{"reference":"sp_search_source"}}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+	if (options.refresh_page_on_search_submission == undefined)
+		data.refreshPageOnSearch = true;
+	else
+		data.refreshPageOnSearch = options.refresh_page_on_search_submission;
+
+	data.resultMsg = gs.getMessage("Search results");
+	data.navigationMsg = gs.getMessage("To navigate, use up and down arrow keys while holding ");
+	data.portalID = $sp.getPortalRecord().getUniqueValue();
+	data.searchMsg = gs.getMessage("Search applications");
+	data.q = $sp.getParameter('q');
+
+	data.searchType = 'euts_avs'
+	data.searchSources = ['euts_avs'];
+	data.typeaheadTemplates = {};
+	data.searchSourceConfiguration = {};
+	var sourceTemplateConfiguration = {};
+	sourceTemplateConfiguration.type = "ADVANCED";
+	sourceTemplateConfiguration.template = "appstore-typeahead.html";
+	var defaultSearchSourceGR = new GlideRecord("sp_search_source");
+	defaultSearchSourceGR.get('aa91f14adbfac8d4f668622dca9619d2');
+	data.typeaheadTemplates["appstore-typeahead.html"] = $sp.translateTemplate(defaultSearchSourceGR.getValue('typeahead_template'));
+	data.searchSourceConfiguration.euts_avs = sourceTemplateConfiguration;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 13:56:50</sys_created_on>
+        <sys_id>8d34126f2f22301097bc18aa2799b638</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Typeahead Search - AppStore</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_8d34126f2f22301097bc18aa2799b638</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:03</sys_updated_on>
+        <template><![CDATA[<form ng-submit="c.submitSearch()">
+  <input type="hidden" name="id" value="search"/>
+  <input type="hidden" name="t" value="{{c.searchType}}"/>
+  <div class="input-group input-group-lg"> <!-- class="input-group input-group-{{::c.options.size}}" -->
+    <input id="search-style" name="q" type="search" placeholder="{{::c.options.title}}" ng-model="c.searchTerm"
+           autocomplete="off"
+           uib-typeahead="item as item.primary for item in c.getResults($viewValue)"
+           typeahead-wait-ms="150"
+           typeahead-on-select="c.onSelect($item, $model, $label)"
+           typeahead-template-url="appstore-typeahead.html"
+           typeahead-focus-first="false"
+           class="custom-form-control input-typeahead"
+           role="textbox"
+           aria-label="{{::c.options.title}}" tabindex="0" aria-haspopup="true">
+    <span class="input-group-btn">
+      <button id="search-icon-box" name="search" type="submit" class="btn btn-{{::c.options.color}}"
+              title="{{::c.data.searchMsg}}" aria-label="{{::c.data.searchMsg}}">
+        <i class="fa fa-search"></i>
+      </button>
+    </span>
+  </div>
+</form>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a223430000001</claim_timestamp>
+        <metadata_update_name>sp_widget_8d34126f2f22301097bc18aa2799b638</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:03</sys_created_on>
+        <sys_id>ff907f542f43301097bc18aa2799b6b4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:03</sys_updated_on>
+    </sys_claim>
+</record_update>

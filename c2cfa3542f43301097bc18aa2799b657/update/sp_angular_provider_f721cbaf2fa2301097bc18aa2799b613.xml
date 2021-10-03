@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_angular_provider">
+    <sp_angular_provider action="INSERT_OR_UPDATE">
+        <name>textEllipsisToggle</name>
+        <script><![CDATA[function textEllipsisToggle() {
+  return {
+template: '<span>{{displayText}}'+ 
+			' <a ng-if="showLessLink" href="javascript:void(0)" ng-click="toggleTruncatedText()"> less</a>'+
+			' <a ng-if="showMoreLink" href="javascript:void(0)" ng-click="toggleTruncatedText()">... more</a>'+
+			'</span>',
+	restrict: 'E',
+	replace:true,
+	scope :     {
+		textLength:  "@",
+		text:  "@",
+	},
+	controller: function($scope) {
+			//$scope.showLink = true;
+			$scope.showMoreLink = true;
+			$scope.showLessLink = false;
+
+			$scope.toggleTo='fullDisplay';
+			var eleText = $scope.text;
+			var eleTextLength = $scope.textLength;
+			var length = parseInt(eleTextLength || 0) || 30,
+              text = eleText || '';
+            if (text && text.length > length) {
+			  $scope.fullText=text;
+              $scope.displayText = text.substring(0, length);
+			  $scope.partialText=text.substring(0, length);
+			  $scope.toggleTo='fullDisplay';
+			  
+            } else {
+              $scope.displayText = text;
+			  //$scope.showLink = false;
+			  $scope.showMoreLink = false;
+			  $scope.showLessLink = false;
+			  $scope.toggleTo='trunc';
+            }
+		
+			$scope.toggleTruncatedText = function() {
+				if($scope.toggleTo=='fullDisplay'){
+					$scope.displayText = $scope.fullText;
+					$scope.toggleTo='trunc'
+					$scope.showMoreLink = false;
+					$scope.showLessLink = true;
+				}else if($scope.toggleTo=='trunc'){
+					$scope.displayText =$scope.partialText;
+					$scope.toggleTo='fullDisplay'
+					$scope.showMoreLink = true;
+					$scope.showLessLink = false;
+				
+				}
+			};
+		/*
+		$scope.expandText = function() {
+					$scope.displayText = $scope.fullText;
+					$scope.showLink = false;
+			};
+			*/
+	}
+  };
+}]]></script>
+        <sys_class_name>sp_angular_provider</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 17:11:57</sys_created_on>
+        <sys_id>f721cbaf2fa2301097bc18aa2799b613</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>textEllipsisToggle</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_angular_provider_f721cbaf2fa2301097bc18aa2799b613</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:07</sys_updated_on>
+        <type>directive</type>
+    </sp_angular_provider>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a2321b0000001</claim_timestamp>
+        <metadata_update_name>sp_angular_provider_f721cbaf2fa2301097bc18aa2799b613</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:07</sys_created_on>
+        <sys_id>b8a0bf542f43301097bc18aa2799b6cc</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:07</sys_updated_on>
+    </sys_claim>
+</record_update>

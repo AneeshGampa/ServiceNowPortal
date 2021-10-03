@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="db_image">
+    <db_image action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <category/>
+        <format>png</format>
+        <height>225</height>
+        <image>6ad867102f43301097bc18aa2799b6b9</image>
+        <name>microsoft_office_logo.png</name>
+        <size_bytes>1677</size_bytes>
+        <sys_class_name>db_image</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:15:56</sys_created_on>
+        <sys_id>9db86bdc2f03301097bc18aa2799b631</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>microsoft_office_logo.png</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>db_image_9db86bdc2f03301097bc18aa2799b631</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+        <thumbnail/>
+        <width>225</width>
+    </db_image>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color>#c6c6c6</average_image_color>
+        <chunk_size_bytes>700000</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>image/png</content_type>
+        <file_name>image</file_name>
+        <hash>0274f9d28c012aeaa52deeb98b68f59cc1fe2c83482be57ccd64dbf8610b3340</hash>
+        <image_height>225</image_height>
+        <image_width>225</image_width>
+        <size_bytes>1677</size_bytes>
+        <size_compressed>1697</size_compressed>
+        <state>available</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:16:06</sys_created_on>
+        <sys_id>6ad867102f43301097bc18aa2799b6b9</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:16:07</sys_updated_on>
+        <table_name>ZZ_YYdb_image</table_name>
+        <table_sys_id>9db86bdc2f03301097bc18aa2799b631</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>H4sIAAAAAAAAAA==</data>
+        <length>16</length>
+        <position>0</position>
+        <sys_attachment display_value="image" sys_id="6ad867102f43301097bc18aa2799b6b9">6ad867102f43301097bc18aa2799b6b9</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:16:06</sys_created_on>
+        <sys_id>aad867102f43301097bc18aa2799b6b9</sys_id>
+    </sys_attachment_doc>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>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</data>
+        <length>2252</length>
+        <position>1</position>
+        <sys_attachment display_value="image" sys_id="6ad867102f43301097bc18aa2799b6b9">6ad867102f43301097bc18aa2799b6b9</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:16:06</sys_created_on>
+        <sys_id>2ed867102f43301097bc18aa2799b6b9</sys_id>
+    </sys_attachment_doc>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a289b10000001</claim_timestamp>
+        <metadata_update_name>db_image_9db86bdc2f03301097bc18aa2799b631</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:50:29</sys_created_on>
+        <sys_id>1eb033942f43301097bc18aa2799b62e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:50:29</sys_updated_on>
+    </sys_claim>
+</record_update>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/***Column Resizing***/&#13;
+#cards-column {&#13;
+  width: 81.83333%;&#13;
+}&#13;
+&#13;
+#filters-column {&#13;
+  width: 18.16667%;&#13;
+}&#13;
+/***End Column Resizing***/&#13;
+&#13;
+#search-style {&#13;
+  height: 42px;&#13;
+  padding: 8px 14px;&#13;
+  font-size: 18px;&#13;
+  border-radius: 4px;&#13;
+  border-bottom-right-radius: 0px;&#13;
+  border-top-right-radius: 0px;&#13;
+}&#13;
+&#13;
+.input-group-btn:last-child &gt; .btn, .input-group-btn:last-child &gt; .btn-group {&#13;
+  z-index: 2;&#13;
+  margin-left: -1px;&#13;
+  height: 42px;&#13;
+  padding: 8px 14px;&#13;
+  font-size: 18px;&#13;
+}&#13;
+&#13;
+.search-box,.close-icon,.search-wrapper {&#13;
+  position: relative;&#13;
+  padding: 10px;&#13;
+}&#13;
+.search-wrapper {&#13;
+  width: 500px;&#13;
+  margin: auto;&#13;
+  margin-top: 50px;&#13;
+}&#13;
+.search-box {&#13;
+  width: 80%;&#13;
+  border: 1px solid #ccc;&#13;
+  outline: 0;&#13;
+  border-radius: 15px;&#13;
+}&#13;
+.close-icon {&#13;
+  border:1px solid transparent;&#13;
+  background-color: transparent;&#13;
+  display: inline-block;&#13;
+  vertical-align: middle;&#13;
+  outline: 0;&#13;
+  cursor: pointer;&#13;
+}&#13;
+.close-icon:after {&#13;
+  content: "X";&#13;
+  display: block;&#13;
+  width: 15px;&#13;
+  height: 15px;&#13;
+  position: absolute;&#13;
+  background-color: #FA9595;&#13;
+  z-index:1;&#13;
+  right: 35px;&#13;
+  top: 0;&#13;
+  bottom: 0;&#13;
+  margin: auto;&#13;
+  padding: 2px;&#13;
+  border-radius: 50%;&#13;
+  text-align: center;&#13;
+  color: white;&#13;
+  font-weight: normal;&#13;
+  font-size: 12px;&#13;
+  box-shadow: 0 0 2px #E50F0F;&#13;
+  cursor: pointer;&#13;
+}&#13;
+.search-box:not(:valid) ~ .close-icon {&#13;
+  display: none;&#13;
+}&#13;
+.input-group .custom-form-control {&#13;
+  position: relative;&#13;
+  z-index: 3;&#13;
+  float: left;&#13;
+  width: 100%;&#13;
+  margin-bottom: 0;&#13;
+}&#13;
+&#13;
+.custom-form-control {&#13;
+  display: block;&#13;
+  width: 100%;&#13;
+  height: 34px;&#13;
+  padding: 6px 12px;&#13;
+  font-size: 14px;&#13;
+  line-height: 1.42857;&#13;
+  color: #555555;&#13;
+  background-color: #fff;&#13;
+  background-image: none;&#13;
+  border: 1px solid #ccc;&#13;
+  border-radius: 4px;&#13;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);&#13;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);&#13;
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;&#13;
+}&#13;
+&#13;
+.custom-form-control:focus {&#13;
+  /**Original Blue&#13;
+  border-color: #66afe9;&#13;
+  outline: 4px solid #66afe9;&#13;
+  outline: 5px auto #66afe9;&#13;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);&#13;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);&#13;
+  End Original Blue**/&#13;
+&#13;
+  //Start new blue&#13;
+  border-color: rgba(53, 126, 189, .4) !important;&#13;
+  outline: 4px solid rgba(53, 126, 189, .4) !important;&#13;
+  outline: 5px auto rgba(53, 126, 189, .4) !important;&#13;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(53, 126, 189, .4) !important;&#13;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px rgba(53, 126, 189, .4) !important;&#13;
+}&#13;
+&#13;
+#logo {&#13;
+  width: 90%; &#13;
+  height: auto;&#13;
+  margin-top: -4.5%;&#13;
+  margin-left: -20px;&#13;
+}&#13;
+&#13;
+.typeahead{z-index:1051!important;}&#13;
+&#13;
+.sp-tagline-color {&#13;
+  color: $sp-tagline-color;&#13;
+}&#13;
+&#13;
+#search-bar {&#13;
+  width: 96%;&#13;
+  padding-top: 10px;&#13;
+  margin-right: 50px;&#13;
+}&#13;
+&#13;
+&#13;
+.appstore-search-banner {&#13;
+  position: relative;&#13;
+  background-size: cover;&#13;
+  background-position: center;&#13;
+  opacity: 1;&#13;
+  height: 100%;&#13;
+  margin-top: 10px;&#13;
+  padding-left: 8px;&#13;
+  padding-right: 7px;&#13;
+}&#13;
+&#13;
+&#13;
+#appstore-search {&#13;
+  margin-bottom: 5px;&#13;
+  width: 90%;&#13;
+}&#13;
+&#13;
+.wrapper-xl {&#13;
+  padding-left: 35px !important;&#13;
+  padding-right: 35px !important;&#13;
+  padding-bottom: 35px !important;&#13;
+  padding-top: 23px !important;&#13;
+}&#13;
+&#13;
+#sorting-container {&#13;
+  float: right;&#13;
+  margin-right: 20px;&#13;
+  width: 100%;&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+#filter-parent-row {&#13;
+  margin-bottom: 3px;&#13;
+}&#13;
+&#13;
+#filter-child-row{&#13;
+  margin-top: 5px;&#13;
+}&#13;
+&#13;
+#filter-heading{&#13;
+  //padding: 8px 5px;&#13;
+  //color: #3a3f51;&#13;
+  background-color: #f5f5f5;&#13;
+  margin-top: 5px;&#13;
+  margin-top: 5px;&#13;
+  font-size: 20px;&#13;
+}&#13;
+&#13;
+#filter-title {&#13;
+  color: #717171;&#13;
+}&#13;
+&#13;
+#sort-filters {&#13;
+  margin-top: 8px;&#13;
+}&#13;
+&#13;
+.sort-drop-button {&#13;
+  width: 100%;&#13;
+  height: 100%;&#13;
+  color: #fff;&#13;
+  //background-color: #83aed4; //Bootstrap color: #428bca;&#13;
+  background-color: #6fad88;&#13;
+  border-color: #357ebd;&#13;
+  display: inline-block;&#13;
+  //margin-bottom: 13px;&#13;
+  font-weight: normal;&#13;
+  text-align: left;&#13;
+  vertical-align: middle;&#13;
+  touch-action: manipulation;&#13;
+  cursor: pointer;&#13;
+  //border: 1px solid transparent;&#13;
+  border: none;&#13;
+  white-space: nowrap;&#13;
+  padding: 6px 12px;&#13;
+  font-size: 14px;&#13;
+  line-height: 1.42857;&#13;
+  border-radius: 4px;&#13;
+  -webkit-user-select: none;&#13;
+  -moz-user-select: none;&#13;
+  -ms-user-select: none;&#13;
+  user-select: none;&#13;
+  box-shadow: 0 8px 15px rgba(56, 96, 92, .05);&#13;
+}&#13;
+&#13;
+//medium wide monitor&#13;
+@media screen and (max-width:1712px) {&#13;
+  #logo {&#13;
+    width: 96%;&#13;
+    height: auto;&#13;
+    margin-top: -2%;&#13;
+  }&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,short_description</field_list>
+        <has_preview>false</has_preview>
+        <id>appstore-search</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Search</name>
+        <option_schema>[{"name":"typeahead_search","default_value":"{title: 'How can we help?', size: 'lg', color: 'default'}","section":"Presentation","label":"Typeahead Search","type":"string"}]</option_schema>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.typeAheadSearch = $sp.getWidget('appstore-typeahead-search', {});
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-09-18 13:54:16</sys_created_on>
+        <sys_id>42a31eaf2f22301097bc18aa2799b68a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Search</sys_name>
+        <sys_package display_value="Global" source="global">global</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</sys_scope>
+        <sys_update_name>sp_widget_42a31eaf2f22301097bc18aa2799b68a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:58</sys_updated_on>
+        <template><![CDATA[<div class="appstore-search-banner">
+  <div class="row">
+    <div class="col-md-2" id="filters-column">
+      <img src="sn-logo-dark-green-email.png" id="logo"/>
+    </div>
+
+
+
+    <div class="col-md-10" id="cards-column">
+      <div id="appstore-search"> 
+        <div id="search-bar">
+          <sp-widget widget="data.typeAheadSearch" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>]]></template>
+    </sp_widget>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="UI">c2cfa3542f43301097bc18aa2799b657</claim_owner_scope>
+        <claim_timestamp>17c46a20dea0000001</claim_timestamp>
+        <metadata_update_name>sp_widget_42a31eaf2f22301097bc18aa2799b68a</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>UI</previous_claim_name>
+        <previous_claim_scope>c2cfa3542f43301097bc18aa2799b657</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-10-03 14:49:57</sys_created_on>
+        <sys_id>66903f542f43301097bc18aa2799b6f1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-10-03 14:49:57</sys_updated_on>
+    </sys_claim>
+</record_update>
